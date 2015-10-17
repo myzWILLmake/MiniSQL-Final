@@ -10,4 +10,4 @@
 
   - `>0`：`string`，值为字符串长度
 
-  
+  为了与`CatalogManager`和`BPlusTree`中的`type`对应。
