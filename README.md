@@ -13,4 +13,4 @@
   为了与`CatalogManager`和`BPlusTree`中的`type`对应。
   
   
-2. `RecordManager`中调用了`BufferManager`未提供的函数`getBlockByOffsets`
+2. `RecordManager`中调用了`BufferManager`未提供的函数`getBlockByOffset`
