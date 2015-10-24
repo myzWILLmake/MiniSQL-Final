@@ -1,13 +1,14 @@
 #include "BPlusTree.hpp"
-#include "CatalogManager.h"
+#include "CatalogManager.hpp"
 #include "BufferManager.hpp"
 #include <iostream>
 #include <vector>
 #include <map>
+#include <utility>
 
 using namespace std;
 
-BPlusTree::BPlusTree(string table, string attr, int mode)
+BPlusTree::BPlusTree(string table, string attr, int mode):bm(), cm()
 {
 	this->table = table;
 	this->attr = attr;
@@ -57,7 +58,7 @@ BPlusTree::BPlusTree(string table, string attr, int mode)
 }
 
 // constructor for debugging
-BPlusTree::BPlusTree(int max)
+BPlusTree::BPlusTree(int max):bm(), cm()
 {
 	max_key_num = max;
 }
@@ -844,9 +845,181 @@ KeyValue BPlusTree::find_min(int block_num)
 		return find_min(nodes[block_num]->offsets[0]);
 }
 
-bool BPlusTree::build(vector<KeyValue> init_keys, vector<int> init_offsets)
+bool BPlusTree::build(vector<pair<KeyValue, int> > init)
 {
-	//TODO
+	/*
+	for (vector<pair<KeyValue, int> >::iterator iter = init.begin(); iter != init.end(); iter++)
+	{
+		insert(iter->first, iter->second);
+	}
+	*/
+	if (init.size() <= max_key_num)
+	{
+		fetch(0);
+		set_pin(0);
+		for (vector<pair<KeyValue, int> >::iterator iter = init.begin(); iter != init.end(); iter++)
+		{
+			nodes[0]->keys.push_back(iter->first);
+			nodes[0]->offsets.push_back(iter->second);
+			nodes[0]->key_num += 1;
+		}
+		write_back(0); 
+		reset_pin(0);
+		release(0);
+	}
+	else
+	{
+		vector<pair<KeyValue, int> > children;
+		int n = init.size();
+		int prev = -1;
+		for (int i = 0; i < n/max_key_num-1; i++)
+		{
+			IndexBlock *tmp = bm.getIndexNewBlock(table, attr);
+			set_pin(tmp->blockNo);
+			blocks[tmp->blockNo] = tmp;
+			nodes[tmp->blockNo] = new Node();
+			Node *cur_node = nodes[tmp->blockNo];
+			cur_node->prev = prev;
+			cur_node->block_num = tmp->blockNo;
+			cur_node->is_leaf = true;
+			cur_node->is_root = false;
+			cur_node->key_num = max_key_num;
+			cur_node->next = -1;
+			if (prev != -1)
+				nodes[cur_node->prev]->next = cur_node->block_num;
+			for (int j = 0; j < max_key_num; j++)
+			{
+				cur_node->keys.push_back(init.front().first);
+				cur_node->offsets.push_back(init.front().second);
+				init.erase(init.begin());
+			}
+			children.push_back(make_pair(cur_node->keys.front(), cur_node->block_num));
+			// write_back(tmp->blockNo);
+			// reset_pin(tmp->blockNo);
+			// release(tmp->blockNo);
+		}
+		for (int n = init.size()/2; init.size() != 0; n = init.size())
+		{
+			IndexBlock *tmp = bm.getIndexNewBlock(table, attr);
+			set_pin(tmp->blockNo);
+			blocks[tmp->blockNo] = tmp;
+			nodes[tmp->blockNo] = new Node();
+			Node *cur_node = nodes[tmp->blockNo];
+			cur_node->prev = prev;
+			cur_node->block_num = tmp->blockNo;
+			cur_node->is_leaf = true;
+			cur_node->is_root = false;
+			cur_node->key_num = n;
+			cur_node->next = -1;
+			if (prev != -1)
+				nodes[cur_node->prev]->next = cur_node->block_num;
+			for (int j = 0; j < n; j++)
+			{
+				cur_node->keys.push_back(init.front().first);
+				cur_node->offsets.push_back(init.front().second);
+				init.erase(init.begin());
+			}
+			children.push_back(make_pair(cur_node->keys.front(), cur_node->block_num));
+		}
+		recur_build(children);
+	}
+	return true;
+}
+
+bool BPlusTree::recur_build(vector<pair<KeyValue, int> > init)
+{
+	if (init.size() <= max_key_num+1)
+	{
+		fetch(0);
+		set_pin(0);
+		int i = 0;
+		for (vector<pair<KeyValue, int> >::iterator iter = init.begin(); iter != init.end(); iter++)
+		{
+			if (iter != init.begin())
+				nodes[0]->keys.push_back(iter->first);
+			nodes[0]->offsets.push_back(iter->second);
+			nodes[0]->key_num += 1;
+			nodes[iter->second]->parent = 0;
+			nodes[iter->second]->child_num = i;
+			write_back(iter->second);
+			reset_pin(iter->second);
+			release(iter->second);
+			i++;
+		}
+		write_back(0);
+		reset_pin(0);
+		release(0);
+	}
+	else
+	{
+		vector<pair<KeyValue, int> > children;
+		int n = init.size();
+		int prev = -1;
+		for (int i = 0; i < n / (max_key_num+1) - 1; i++)
+		{
+			IndexBlock *tmp = bm.getIndexNewBlock(table, attr);
+			set_pin(tmp->blockNo);
+			blocks[tmp->blockNo] = tmp;
+			nodes[tmp->blockNo] = new Node();
+			Node *cur_node = nodes[tmp->blockNo];
+			cur_node->prev = prev;
+			cur_node->block_num = tmp->blockNo;
+			cur_node->is_leaf = true;
+			cur_node->is_root = false;
+			cur_node->key_num = max_key_num;
+			cur_node->next = -1;
+			if (prev != -1)
+				nodes[cur_node->prev]->next = cur_node->block_num;
+			int child_num = 0;
+			for (int j = 0; j < (max_key_num+1); j++, child_num++)
+			{
+				if (j == 0)
+					children.push_back(make_pair(cur_node->keys.front(), cur_node->block_num));
+				else
+					cur_node->keys.push_back(init.front().first);
+				cur_node->offsets.push_back(init.front().second);
+				nodes[init.front().second]->parent = cur_node->block_num;
+				nodes[init.front().second]->child_num = child_num;
+				write_back(init.front().second);
+				reset_pin(init.front().second);
+				release(init.front().second);
+				init.erase(init.begin());
+			}
+		}
+		for (int n = init.size() / 2; init.size() != 0; n = init.size())
+		{
+			IndexBlock *tmp = bm.getIndexNewBlock(table, attr);
+			set_pin(tmp->blockNo);
+			blocks[tmp->blockNo] = tmp;
+			nodes[tmp->blockNo] = new Node();
+			Node *cur_node = nodes[tmp->blockNo];
+			cur_node->prev = prev;
+			cur_node->block_num = tmp->blockNo;
+			cur_node->is_leaf = true;
+			cur_node->is_root = false;
+			cur_node->key_num = n-1;
+			cur_node->next = -1;
+			if (prev != -1)
+				nodes[cur_node->prev]->next = cur_node->block_num;
+			int child_num = 0;
+			for (int j = 0; j < n; j++, child_num++)
+			{
+				if (j == 0)
+					children.push_back(make_pair(cur_node->keys.front(), cur_node->block_num));
+				else
+					cur_node->keys.push_back(init.front().first);
+				cur_node->offsets.push_back(init.front().second);
+				nodes[init.front().second]->parent = cur_node->block_num;
+				nodes[init.front().second]->child_num = child_num;
+				write_back(init.front().second);
+				reset_pin(init.front().second);
+				release(init.front().second);
+				init.erase(init.begin());
+			}
+			children.push_back(make_pair(cur_node->keys.front(), cur_node->block_num));
+		}
+		recur_build(children);
+	}
 	return true;
 }
 

@@ -1,18 +1,27 @@
 #ifndef INDEXMANAGER_H
 #define INDEXMANAGER_H
 
-#include "CatalogManager.h"
+#include "CatalogManager.hpp"
 #include "KeyValue.hpp"
 #include <string>
 
+#define UPPER_BOUND 0
+#define LOWER_BOUND 1
+
 using namespace std;
 
-class IndexManager {
+class RecordManager;
 
-	CatalogManager cm;
+class IndexManager {
+private:
+	CatalogManager *cm;
+	RecordManager *rm;
+
+public:
+	IndexManager();
 
 	// add an index to an empty table or a table with data
-	int addIndex(string table, string attr);
+	bool addIndex(string table, string attr);
 
 	// drop all indices on the table
 	bool dropIndexAll(string table);
@@ -28,6 +37,10 @@ class IndexManager {
 
 	// retrieve index
 	vector<int> retrieve(string table, string attr, KeyValue lower, bool lowerIn, KeyValue upper, bool upperIn);
+
+	// retrieve index with only upper bound or lower bound
+	vector<int> retrieve(string table, string attr, KeyValue bound, bool in, int mode);
+
 };
 
 #endif

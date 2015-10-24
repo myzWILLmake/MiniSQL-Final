@@ -1,6 +1,8 @@
-#include "KeyValue.h"
+#include "KeyValue.hpp"
 #include <iostream>
 #include <string>
+#include <climits>
+#include <cfloat>
 
 using namespace std;
 
@@ -73,6 +75,40 @@ KeyValue::KeyValue(float init): f(init), type(0)
 
 KeyValue::KeyValue(string init, int len): s(init), type(len)
 {
+}
+
+KeyValue::KeyValue(Value v)
+{
+	switch (v.type)
+	{
+	case -1: i = v.Vint; break;
+	case 0: f = v.Vdouble; break;
+	default: s = v.Vstring; break;
+	}
+	type = v.type;
+}
+
+KeyValue::KeyValue(int type, int mode)
+{
+	if (mode == MAX_VALUE)
+	{
+		switch (type)
+		{
+		case -1: i = INT_MAX; break;
+		case 0: f = FLT_MAX; break;
+		default: s = string(type, CHAR_MAX); break;
+		}
+	}
+	else if (mode == MIN_VALUE)
+	{
+		switch (type)
+		{
+		case -1: i = INT_MIN; break;
+		case 0: f = FLT_MIN; break;
+		default: s = string(type, CHAR_MIN); break;
+		}
+	}
+	this->type = type;
 }
 
 void KeyValue::output(char *&p)

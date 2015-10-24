@@ -14,7 +14,7 @@
 #define REMOVE_UNFOUND 1
 
 #include "KeyValue.hpp"
-#include "CatalogManager.h"
+#include "CatalogManager.hpp"
 #include "BufferManager.hpp"
 #include <string>
 #include <vector>
@@ -73,7 +73,10 @@ public:
 	int remove(KeyValue key);
 
 	// build a new tree on a bunch of keys
-	bool build(vector<KeyValue> init_keys, vector<int> init_offsets);
+	bool build(vector<pair<KeyValue, int> > init);
+
+	// internally called in 'build' function
+	bool recur_build(vector<pair<KeyValue, int> > init);
 
 	// search for a specific key in the tree
 	// return KEY_NOT_FOUND(-1) on failure
