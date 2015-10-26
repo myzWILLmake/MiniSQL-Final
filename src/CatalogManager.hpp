@@ -17,23 +17,23 @@ class CatalogManager
 public:
 	CatalogManager();
 	~CatalogManager();
-	void createTableCatalog();
-	void createIndexCatalog();
-	bool createTableInfo(TransferArguments *args);
-	bool dropTableInfo(string tableName);
-	bool dropIndexInfo(string indexName);
-	bool addIndexInfo(string indexName, string tableName, string attributeName);
-	bool addTableInfo(string tableName);
-	bool checkTable(string tableName);
-	bool checkIndex(string tableName, string attributeName);
-	bool checkIndex(string indexName);
-	string getIndexName(string tableName, string attributeName);
-	int checkAttribute(string tableName, string attributeName);
-	string getTableInfoPathName(string tableName);
-	vector<string> getAttributeNames(string tableName);
-	vector<int> getAttributeTypes(string tableName);
-	int getAttributeType(string tableName, string attributeName);
-	pair<int, int> getAttributePos(string tableName, string attributeName);
+	void createTableCatalog(); // create the file "./catalogs/table_catalog"
+	void createIndexCatalog(); // create the file "./catalogs/index_catalog"
+	bool createTableInfo(TransferArguments *args); // create info file of a table
+	bool dropTableInfo(string tableName); // drop info file of a table by table name
+	bool dropIndexInfo(string indexName); // drop info of an index by index name
+	bool addIndexInfo(string indexName, string tableName, string attributeName); // add an index info with index name, table name and attribute name as input
+	bool addTableInfo(string tableName); // add a table info with table name as input
+	bool checkTable(string tableName); // check if this table exists, return true if it exists(vice versa)
+	bool checkIndex(string tableName, string attributeName); // check if this index exists, with table name and attribute name as input
+	bool checkIndex(string indexName); // check if this index exists, with index name as input
+	string getIndexName(string tableName, string attributeName); // return index name corresponding to the table name and attribute name, invoked when it does exist
+	int checkAttribute(string tableName, string attributeName); // check if this table has this attribute
+	string getTableInfoPathName(string tableName); // return the path name of a table info file with table name as input
+	vector<string> getAttributeNames(string tableName); // return all attribute names of table in order
+	vector<int> getAttributeTypes(string tableName); // return all attribute types of table in order
+	int getAttributeType(string tableName, string attributeName); // get type of an attribute by table name and attribute name
+	pair<int, int> getAttributePos(string tableName, string attributeName); // get start position and length of an attribute in a record
 };
 
 #endif
