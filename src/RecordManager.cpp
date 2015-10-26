@@ -10,7 +10,7 @@ RecordManager::~RecordManager()
 {
 }
 
-/*
+/**
  * call bm to create a record file in disk
  */
 bool RecordManager::createTable(string tableName)
@@ -21,7 +21,7 @@ bool RecordManager::createTable(string tableName)
 	return false;
 }
 
-/*
+/**
  * call bm to delete a record file in disk
  */
 bool RecordManager::dropTable(string tableName)
@@ -32,7 +32,7 @@ bool RecordManager::dropTable(string tableName)
 	return false;
 }
 
-/*
+/**
  * insert a record to a table
  */
 bool RecordManager::insertRecord(string tableName, Record& record)
@@ -60,7 +60,7 @@ bool RecordManager::insertRecord(string tableName, Record& record)
 	return true;
 }
 
-/*
+/**
  * delete records in a table with condition 
  */
 bool RecordManager::deleteRecord(string tableName, vector<Value> &inputCondition)
@@ -163,7 +163,7 @@ bool RecordManager::deleteRecord(string tableName, vector<Value> &inputCondition
 	
 }
 
-/*
+/**
  * select records in a table with condition 
  */
 bool RecordManager::selectRecord(string tableName, vector<Value> &inputCondition)
@@ -282,7 +282,7 @@ bool RecordManager::selectRecord(string tableName, vector<Value> &inputCondition
 	}
 }
 
-/*
+/**
  * get all values of an attribute in a table and offsets of those records
  * here, offset = blockNo*EACH_BLOCK_RECORDS+recordIndex
  * if offset = 20, then this record is at 20th record box in disk table file,
@@ -330,7 +330,7 @@ bool RecordManager::getKeysOffsets(string tableName, string attributeName, vecto
 	}
 }
 
-/*
+/**
  * print records of select results
  */
 void RecordManager::printRecord(const Record & record, vector<int> &attributeTypes)
@@ -351,7 +351,7 @@ void RecordManager::printRecord(const Record & record, vector<int> &attributeTyp
 	cout << endl;
 }
 
-/*
+/**
  * print table head of select results
  */
 void RecordManager::printHead(vector<string> &attributeNames)
@@ -362,7 +362,7 @@ void RecordManager::printHead(vector<string> &attributeNames)
 	cout << endl;
 }
 
-/*
+/**
  * optimize the inputCondition to condition
  * there may be many redundant or conflicting conditions
  * e.g. age=9 and age!=10  --> age=9
@@ -612,7 +612,7 @@ bool RecordManager::optimize(string tableName, vector<Value>& inputCondition, Co
 	return true;
 }
 
-/*
+/**
  * return true if reocord match condition 
  */
 bool RecordManager::match(const Record &record, Condition & condition, string tableName)
@@ -657,7 +657,7 @@ bool RecordManager::match(const Record &record, Condition & condition, string ta
 	return true;
 }
 
-/*
+/**
  * compare two values
  */
 bool RecordManager::compare(Value & v1, Value & v2, string op)
@@ -681,7 +681,7 @@ bool RecordManager::compare(Value & v1, Value & v2, string op)
 		return v1 != v2;
 	}
 }
-/*
+/**
 string RecordManager::getRecordPathName(string tableName)
 {
 	return "./records/"+tableName;

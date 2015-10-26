@@ -1,6 +1,6 @@
 #include "CatalogManager.hpp"
 
-/*
+/**
  * constructor of CatalogManager
  * it ensures that there are two files:'table_catalog' & 'index_catalog' in directory 'catalogs' 
  */
@@ -10,14 +10,14 @@ CatalogManager::CatalogManager()
 	createIndexCatalog();
 }
 
-/*
+/**
  * destructor of CatalogManager
  */
 CatalogManager::~CatalogManager()
 {
 }
 
-/*
+/**
  * open './catalogs/table_catalog' in app mode
  */
 void CatalogManager::createTableCatalog()
@@ -32,7 +32,7 @@ void CatalogManager::createTableCatalog()
 	}
 }
 
-/*
+/**
  * open './catalogs/index_catalog' in app mode
  */
 void CatalogManager::createIndexCatalog()
@@ -47,7 +47,7 @@ void CatalogManager::createIndexCatalog()
 	}
 }
 
-/*
+/**
  * In a tableinfo file, first there are n(n=tableInfoLines) lines basic information about the table
  * Here, n=3:
  * 		line 1: table name
@@ -80,7 +80,7 @@ bool CatalogManager::createTableInfo(TransferArguments * args)
 	}
 }
 
-/* 
+/** 
  * Drop the tableinfo of a table needs 3 things to do:
  *		1.update index_catalog
  *		2.update table_catalog
@@ -151,7 +151,7 @@ bool CatalogManager::dropTableInfo(string tableName)
 	}
 }
 
-/* 
+/** 
  * Drop an index info by index name 
  */
 bool CatalogManager::dropIndexInfo(string indexName)
@@ -184,7 +184,7 @@ bool CatalogManager::dropIndexInfo(string indexName)
 	}
 }
 
-/* 
+/** 
  * Add  an index info to index_catalog
  * Each line of index_catalog is an index info
  * There are 3 values divided by tab:
@@ -205,7 +205,7 @@ bool CatalogManager::addIndexInfo(string indexName, string tableName, string att
 	}
 }
 
-/* 
+/** 
  * Add a table info to table_catalog
  * Each line of table_catalog is an table info
  * There are only 1 value:
@@ -226,7 +226,7 @@ bool CatalogManager::addTableInfo(string tableName)
 	}
 }
 
-/*
+/**
  * Check table in table_catalog
  * 		return true if this table exists
  * 		return false if this table doesn't exist
@@ -253,7 +253,7 @@ bool CatalogManager::checkTable(string tableName)
 	}
 }
 
-/*
+/**
  * Check index in index_catalog by table name and attribute name
  * 		return true if this index exists
  * 		return false if this index doesn't exist
@@ -282,7 +282,7 @@ bool CatalogManager::checkIndex(string tableName, string attributeName)
 	}
 }
 
-/*
+/**
  * Check index in index_catalog by index name
  * 		return true if this index exists
  * 		return false if this index doesn't exist
@@ -313,7 +313,7 @@ bool CatalogManager::checkIndex(string indexName)
 	}
 }
 
-/*
+/**
  * Get index name in index_catalog by table name and attribute name
  * Before call this function, you need to call checkIndex to ensure the index exists
  */
@@ -341,7 +341,7 @@ string CatalogManager::getIndexName(string tableName, string attributeName)
 	}
 }
 
-/* 
+/** 
  * Check one attribute in a table 
  * 		return 2: primary, also unique
  * 		return 1: unique
@@ -382,7 +382,7 @@ int CatalogManager::checkAttribute(string tableName, string attributeName)
 	}
 }
 
-/*
+/**
  * Table info files are all in directory 'catalogs'
  * and is named as the table name
  */
@@ -391,7 +391,7 @@ string CatalogManager::getTableInfoPathName(string tableName)
 	return "./catalogs/"+tableName;
 }
 
-/* 
+/** 
  * Get all attributes' names of a table
  * When print the result of select statement,
  * we need to print the table head first
@@ -422,7 +422,7 @@ vector<string> CatalogManager::getAttributeNames(string tableName)
 	return attributeNames;
 }
 
-/* 
+/** 
  * Get all attributes' types of a table
  */
 vector<int> CatalogManager::getAttributeTypes(string tableName)
@@ -451,7 +451,7 @@ vector<int> CatalogManager::getAttributeTypes(string tableName)
 	return attributeTypes;
 }
 
-/*
+/**
  * Get the type of an attribute by table name and attribute name
  */
 int CatalogManager::getAttributeType(string tableName, string attributeName)
@@ -481,7 +481,7 @@ int CatalogManager::getAttributeType(string tableName, string attributeName)
 	return -2;
 }
 
-/*
+/**
  * Get an attribute's position and length in a record
  * return pair<int, int>(position, size)
  * e.g. table student(sname char(10), sage int, gpa float)
