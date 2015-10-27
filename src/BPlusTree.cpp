@@ -26,7 +26,7 @@ BPlusTree::BPlusTree(string table, string attr, int mode):bm(), cm()
 		exit(0);
 	}
 	this->max_key_num = (0x1000 - sizeof(int) * 6 - sizeof(int) * 2) / (key_size + sizeof(int)) - 1;
-
+	
 	if (mode == CREATE_TREE)
 	{
 		blocks[0] = bm.getIndexNewBlock(table, attr);
@@ -46,7 +46,6 @@ BPlusTree::BPlusTree(string table, string attr, int mode):bm(), cm()
 	}
 	else if (mode == FETCH_TREE)
 	{
-
 		blocks[0] = bm.getIndexBlock(table, attr, 0);
 		nodes[0] = new Node(blocks[0]->address, cm.getAttributeType(table, attr));
 	}

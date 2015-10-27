@@ -15,12 +15,12 @@ bool IndexManager::addIndex(string table, string attr)
 	vector<pair<Value, int> > tmp;
 	vector<pair<KeyValue, int> > init;
 	BPlusTree BT(table, attr, CREATE_TREE);
-	rm->getKeysOffsets(table, attr, tmp);
-	if (tmp.size() > 0)
+	rm->getKeysOffsets(table, attr, tmp);// get record-offset pairs from RecordManager
+	if (tmp.size() > 0)// if there exist some records already
 	{
 		for (vector<pair<Value, int> >::iterator iter = tmp.begin(); iter != tmp.end(); iter++)
 		{
-			init.push_back(make_pair(KeyValue(iter->first), iter->second));
+			init.push_back(make_pair(KeyValue(iter->first), iter->second));// convert Value to KeyValue
 		}
 		sort(init.begin(), init.end());
 		BT.build(init);

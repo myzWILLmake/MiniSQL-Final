@@ -143,4 +143,4 @@ private:
 	void recur_destroy(int block_num);
 };
 
-#endif
+#endif /* BPLUSTREE_H */
