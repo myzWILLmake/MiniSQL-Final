@@ -24,7 +24,7 @@ public:
 	~RecordManager();
 	bool createTable(string tableName); // create a table record file
 	bool dropTable(string tableName); // drop a table record file
-	bool insertRecord(string tableName, Record &record); // insert a record to a table, api should check record and if the table exists
+	bool insertRecord(string tableName, Record &record, int &offset); // insert a record to a table, api should check record and if the table exists
 	bool deleteRecord(string tableName, vector<Value> &inputCondition); // delete record with conditions
 	bool selectRecord(string tableName, vector<Value> &inputCondition); // query records with conditions
 	bool getKeysOffsets(string tableName, string attributeName, vector<pair<Value, int>> &tmp); //get all values of an attribute in a table and offsets of those records

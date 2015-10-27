@@ -35,7 +35,7 @@ bool RecordManager::dropTable(string tableName)
 /**
  * insert a record to a table
  */
-bool RecordManager::insertRecord(string tableName, Record& record)
+bool RecordManager::insertRecord(string tableName, Record& record, int &offset)
 {
 	if (!cm->checkTable(tableName)) {
 		cout << "Error! Table \'" + tableName + "\' not exists" << endl;
@@ -56,6 +56,7 @@ bool RecordManager::insertRecord(string tableName, Record& record)
 			break;
 		}
 	}
+	offset=block->recordNum*EACH_BLOCK_RECORDS+i;
 	block->recordNum++;
 	return true;
 }
