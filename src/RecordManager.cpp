@@ -161,7 +161,7 @@ bool RecordManager::deleteRecord(string tableName, vector<Value> &inputCondition
 			}
 		}
 	}
-	
+	return true;
 }
 
 /**
@@ -281,6 +281,7 @@ bool RecordManager::selectRecord(string tableName, vector<Value> &inputCondition
 			}
 		}
 	}
+	return true;
 }
 
 /**
@@ -329,6 +330,7 @@ bool RecordManager::getKeysOffsets(string tableName, string attributeName, vecto
 		}
 		block = bm->getNextBlock(block);
 	}
+	return true;
 }
 
 /**
@@ -681,6 +683,7 @@ bool RecordManager::compare(Value & v1, Value & v2, string op)
 	else if (op == "<>") {
 		return v1 != v2;
 	}
+	return false;
 }
 /**
 string RecordManager::getRecordPathName(string tableName)

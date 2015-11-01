@@ -11,14 +11,13 @@
 
 typedef map<string, vector<Value>>  Condition;
 
-class IndexManager;
-
 class RecordManager
 {
 private:
-	CatalogManager *cm;
-	BufferManager *bm;
-	IndexManager *im;
+	//delete these
+	//CatalogManager *cm;
+	//BufferManager *bm;
+	//IndexManager *im;
 public:
 	RecordManager();
 	~RecordManager();
