@@ -37,10 +37,6 @@ bool RecordManager::dropTable(string tableName)
  */
 bool RecordManager::insertRecord(string tableName, Record& record, int &offset)
 {
-	if (!cm->checkTable(tableName)) {
-		cout << "Error! Table \'" + tableName + "\' not exists" << endl;
-		return false;
-	}
 	// buffer manager should ensure won't return null, if the table is empty, 
 	// it should return a empty block but not null
 	Block *block = bm->getFirstBlock(tableName);
@@ -66,10 +62,6 @@ bool RecordManager::insertRecord(string tableName, Record& record, int &offset)
  */
 bool RecordManager::deleteRecord(string tableName, vector<Value> &inputCondition)
 {
-	if (!cm->checkTable(tableName)) {
-		cout << "Error! Table \'" + tableName + "\' not exists" << endl;
-		return false;
-	}
 	Condition condition;
 	Condition::iterator map_it;
 	vector<Value>::iterator vec_it;
@@ -169,11 +161,6 @@ bool RecordManager::deleteRecord(string tableName, vector<Value> &inputCondition
  */
 bool RecordManager::selectRecord(string tableName, vector<Value> &inputCondition)
 {
-	if (!cm->checkTable(tableName)) {
-		cout << "Error! Table \'" + tableName + "\' not exists" << endl;
-		return false;
-	}
-	
 	Condition condition;
 	Condition::iterator map_it;
 	vector<Value>::iterator vec_it;
@@ -292,15 +279,11 @@ bool RecordManager::selectRecord(string tableName, vector<Value> &inputCondition
  */
 bool RecordManager::getKeysOffsets(string tableName, string attributeName, vector<pair<Value, int>>& tmp)
 {
-	if (!cm->checkTable(tableName)) {
-		cout << "Error! Table \'" + tableName + "\' not exists" << endl;
-		return false;
-	}
 	int type, size, pos, offset;
 	char *sTmp = "";
 	pair<int, int>p = cm->getAttributePos(tableName, attributeName);
 
-	if (p.first <= 0 || p.second <= 0) {
+	if (p.first < 0 || p.second < 0) {
 		cout << "Error" << endl;
 		return false;
 	}
@@ -630,7 +613,7 @@ bool RecordManager::match(const Record &record, Condition & condition, string ta
 		attributeName = map_it->first;
 		pair<int, int>p = cm->getAttributePos(tableName, attributeName);
 
-		if (p.first <= 0 || p.second <= 0) {
+		if (p.first < 0 || p.second < 0) {
 			cout << "Error" << endl;
 			return false;
 		}
@@ -685,9 +668,3 @@ bool RecordManager::compare(Value & v1, Value & v2, string op)
 	}
 	return false;
 }
-/**
-string RecordManager::getRecordPathName(string tableName)
-{
-	return "./records/"+tableName;
-}*/
-

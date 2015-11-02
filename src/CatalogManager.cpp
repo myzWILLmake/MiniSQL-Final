@@ -488,7 +488,7 @@ int CatalogManager::getAttributeType(string tableName, string attributeName)
 pair<int, int> CatalogManager::getAttributePos(string tableName, string attributeName)
 {
 	int pos=0, size;
-	pair<int, int>p(0,0);
+	pair<int, int>p(-1, -1);
 	string pathName = getTableInfoPathName(tableName);
 	ifstream fin;
 	fin.open(pathName, fstream::in);
