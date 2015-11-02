@@ -63,7 +63,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "80"
             endingLineNumber = "80"
-            landmarkName = "BPlusTree::insert(KeyValue key, int offset)"
+            landmarkName = "BPlusTree::fetch(int block_num)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -111,7 +111,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "83"
             endingLineNumber = "83"
-            landmarkName = "BPlusTree::insert(KeyValue key, int offset)"
+            landmarkName = "BPlusTree::fetch(int block_num)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -143,7 +143,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "140"
             endingLineNumber = "140"
-            landmarkName = "BPlusTree::write_back(int block_num)"
+            landmarkName = "BPlusTree::reset_pin(int block_num)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -223,7 +223,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1051"
             endingLineNumber = "1051"
-            landmarkName = "BPlusTree::search(KeyValue key)"
+            landmarkName = "BPlusTree::recur_search(int block_num, vector&lt;int&gt; &amp;indices, KeyValue lower, bool lowerIn, KeyValue upper, bool upperIn)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -239,7 +239,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1050"
             endingLineNumber = "1050"
-            landmarkName = "BPlusTree::search(KeyValue key)"
+            landmarkName = "BPlusTree::recur_search(int block_num, vector&lt;int&gt; &amp;indices, KeyValue lower, bool lowerIn, KeyValue upper, bool upperIn)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

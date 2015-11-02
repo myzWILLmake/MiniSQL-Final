@@ -10,7 +10,9 @@
 #include "CatalogManager.hpp"
 #include "IndexManager.hpp"
 #include "RecordManager.hpp"
+#include "BufferManager.hpp"
 
 CatalogManager * cm = new CatalogManager();
 IndexManager * im = new IndexManager();
 RecordManager * rm = new RecordManager();
+BufferManager * bm = new BufferManager();

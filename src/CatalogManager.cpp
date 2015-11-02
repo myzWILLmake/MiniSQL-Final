@@ -335,6 +335,7 @@ string CatalogManager::getIndexName(string tableName, string attributeName)
 		}
 		fin.close();
 	}
+    return "";
 }
 
 /**

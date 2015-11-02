@@ -1,5 +1,5 @@
+#include "API.hpp"
 #include "RecordManager.hpp"
-#include "IndexManager.hpp"
 
 RecordManager::RecordManager()
 {
@@ -129,7 +129,7 @@ bool RecordManager::deleteRecord(string tableName, vector<Value> &inputCondition
 						int recordIndex;
 						for(int i=0; i<result.size(); i++){
 							//need this function from bufferManager
-							Block *block= bm->getBlockByOffset(result[i]);
+							Block *block= bm->getBlockByOffset(tableName, result[i]);
 							recordIndex=result[i]-block->blockNo*EACH_BLOCK_RECORDS;
 							if(match(block->records[recordIndex], condition, tableName)){
 								block->records[recordIndex].empty=true;
@@ -236,7 +236,7 @@ bool RecordManager::selectRecord(string tableName, vector<Value> &inputCondition
 						int recordIndex;
 						for(int i=0; i<result.size(); i++){
 							//need this function from bufferManager
-							Block *block = bm->getBlockByOffset(result[i]);
+							Block *block = bm->getBlockByOffset(tableName, result[i]);
 							recordIndex=result[i]-block->blockNo*EACH_BLOCK_RECORDS;
 							if(match(block->records[recordIndex], condition, tableName)){
 								if (flag3 == 0) {

@@ -1,7 +1,6 @@
 #ifndef INDEXMANAGER_H
 #define INDEXMANAGER_H
 
-#include "CatalogManager.hpp"
 #include "KeyValue.hpp"
 #include <string>
 
@@ -9,8 +8,6 @@
 #define LOWER_BOUND 1
 
 using namespace std;
-
-class RecordManager;
 
 class IndexManager {
 

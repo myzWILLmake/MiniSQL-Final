@@ -12,9 +12,16 @@
 #include "CatalogManager.hpp"
 #include "IndexManager.hpp"
 #include "RecordManager.hpp"
+#include "BufferManager.hpp"
 
+class CatalogManager;
+class IndexManager;
+class RecordManager;
+class BufferManager;
 
+extern BufferManager * bm;
+extern CatalogManager * cm;
 extern IndexManager * im;
 extern RecordManager * rm;
-extern CatalogManager * cm;
+
 #endif /* API_hpp */
