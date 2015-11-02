@@ -105,7 +105,7 @@ void changeIntoNewType(TransferArguments &transferArg)
             it->type=-2;
         }
         if (it->type==3) {
-            it->type=int(it->Vstring.size());
+            it->type=128;
         }
 //        if (it->type==-1) then its still -1
     }

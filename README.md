@@ -8,7 +8,7 @@
 
   - `-2`：`float`
 
-  - `>=0`：`string`，值为字符串长度
+  - `>=0`：`string`，值为字符串长度 一开始是128
 
   为了与`CatalogManager`和`BPlusTree`中的`type`对应。
   
