@@ -2,7 +2,7 @@
 
 /**
  * constructor of CatalogManager
- * it ensures that there are two files:'table_catalog' & 'index_catalog' in directory 'catalogs'
+ * it ensures that there are two files:'catalogs_table_catalog' & 'catalogs_index_catalog'
  */
 CatalogManager::CatalogManager()
 {
@@ -18,7 +18,7 @@ CatalogManager::~CatalogManager()
 }
 
 /**
- * open './catalogs/table_catalog' in app mode
+ * open 'catalogs_table_catalog' in app mode
  */
 void CatalogManager::createTableCatalog()
 {
@@ -33,7 +33,7 @@ void CatalogManager::createTableCatalog()
 }
 
 /**
- * open './catalogs/index_catalog' in app mode
+ * open 'catalogs_index_catalog' in app mode
  */
 void CatalogManager::createIndexCatalog()
 {
@@ -149,6 +149,7 @@ bool CatalogManager::dropTableInfo(string tableName)
 		cout << "Failed to delete file " << pathName << endl;
 		return false;
 	}
+	return true;
 }
 
 /**
@@ -179,7 +180,7 @@ bool CatalogManager::dropIndexInfo(string indexName)
 		return true;
 	}
 	else {
-		cout << "Failed to open file 'index_catalog' or failed to create file 'temp_file'" << endl;
+		cout << "Failed to open file 'catalogs_index_catalog' or failed to create file 'temp_file'" << endl;
 		return false;
 	}
 }
@@ -248,7 +249,7 @@ bool CatalogManager::checkTable(string tableName)
 		return false;
 	}
 	else {
-		cout << "Failed to open file 'table_catalog'" << endl;
+		cout << "Failed to open file 'catalogs_table_catalog'" << endl;
 		return false;
 	}
 }
@@ -277,7 +278,7 @@ bool CatalogManager::checkIndex(string tableName, string attributeName)
 		return false;
 	}
 	else {
-		cout << "Failed to open file 'index_catalog'" << endl;
+		cout << "Failed to open file 'catalogs_index_catalog'" << endl;
 		return false;
 	}
 }
@@ -308,7 +309,7 @@ bool CatalogManager::checkIndex(string indexName)
 		return false;
 	}
 	else {
-		cout << "Failed to open file 'index_catalog'" << endl;
+		cout << "Failed to open file 'catalogs_index_catalog'" << endl;
 		return false;
 	}
 }
@@ -333,11 +334,6 @@ string CatalogManager::getIndexName(string tableName, string attributeName)
 			}
 		}
 		fin.close();
-		return false;
-	}
-	else {
-		cout << "Failed to open file 'index_catalog'" << endl;
-		return false;
 	}
 }
 
