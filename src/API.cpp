@@ -33,8 +33,9 @@ void APICreateTable(TransferArguments transferArg)
         cout<<"ERROR: table already exists!"<<endl;
         return;
     }
-    
+
     cm->createTableInfo(&transferArg);
-    im->addIndex(transferArg.tableName, transferArg.primary_key);
     rm->createTable(transferArg.tableName);
+    im->addIndex(transferArg.tableName, transferArg.primary_key);
+
 }
