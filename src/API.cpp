@@ -12,7 +12,15 @@
 #include "RecordManager.hpp"
 #include "BufferManager.hpp"
 
-CatalogManager * cm = new CatalogManager();
-IndexManager * im = new IndexManager();
-RecordManager * rm = new RecordManager();
-BufferManager * bm = new BufferManager();
+CatalogManager * cm;
+IndexManager * im;
+RecordManager * rm;
+BufferManager * bm;
+
+void init()
+{
+    CatalogManager * cm = new CatalogManager();
+    IndexManager * im = new IndexManager();
+    RecordManager * rm = new RecordManager();
+    BufferManager * bm = new BufferManager();
+}

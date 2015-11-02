@@ -18,6 +18,7 @@ using namespace std;
 
 int main(int argc, const char * argv[]) {
     // insert code here...
+    init();
     while (true) {
         analyze(sqlRead(cin));
         if (sqlExit) {

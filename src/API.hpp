@@ -24,4 +24,5 @@ extern CatalogManager * cm;
 extern IndexManager * im;
 extern RecordManager * rm;
 
+void init();
 #endif /* API_hpp */
