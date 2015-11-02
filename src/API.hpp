@@ -13,11 +13,13 @@
 #include "IndexManager.hpp"
 #include "RecordManager.hpp"
 #include "BufferManager.hpp"
+#include "CommonHeader.hpp"
 
 class CatalogManager;
 class IndexManager;
 class RecordManager;
 class BufferManager;
+class TransferArguments;
 
 extern BufferManager * bm;
 extern CatalogManager * cm;
@@ -25,4 +27,5 @@ extern IndexManager * im;
 extern RecordManager * rm;
 
 void init();
+void APICreateTable(TransferArguments);
 #endif /* API_hpp */

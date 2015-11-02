@@ -11,11 +11,13 @@
 #include "IndexManager.hpp"
 #include "RecordManager.hpp"
 #include "BufferManager.hpp"
+#include "CommonHeader.hpp"
 
 CatalogManager * cm;
 IndexManager * im;
 RecordManager * rm;
 BufferManager * bm;
+
 
 void init()
 {
@@ -23,4 +25,16 @@ void init()
     IndexManager * im = new IndexManager();
     RecordManager * rm = new RecordManager();
     BufferManager * bm = new BufferManager();
+}
+
+void APICreateTable(TransferArguments transferArg)
+{
+    if (cm->checkTable(transferArg.tableName)) {
+        cout<<"ERROR: table already exists!"<<endl;
+        return;
+    }
+    
+    cm->createTableInfo(&transferArg);
+    im->addIndex(transferArg.tableName, transferArg.primary_key);
+    rm->createTable(transferArg.tableName);
 }

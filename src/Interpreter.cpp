@@ -147,6 +147,9 @@ void analyze(string s)
         
         // start to run API
         printTransferArguments(transferArg);
+        cout<<"print finished"<<endl;
+        
+        APICreateTable(transferArg);
     }
     if (s.find("drop table")==0)
     {
