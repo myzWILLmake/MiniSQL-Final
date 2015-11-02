@@ -17,8 +17,8 @@ class CatalogManager
 public:
 	CatalogManager();
 	~CatalogManager();
-	void createTableCatalog(); // create the file "./catalogs/table_catalog"
-	void createIndexCatalog(); // create the file "./catalogs/index_catalog"
+	void createTableCatalog(); // create the file "catalogs_table_catalog"
+	void createIndexCatalog(); // create the file "catalogs_index_catalog"
 	bool createTableInfo(TransferArguments *args); // create info file of a table
 	bool dropTableInfo(string tableName); // drop info file of a table by table name
 	bool dropIndexInfo(string indexName); // drop info of an index by index name
