@@ -95,6 +95,22 @@ void printTransferArguments(TransferArguments transferArg)
     }
 }
 
+void changeIntoNewType(TransferArguments &transferArg)
+{
+    for (vector<Value>::iterator it=transferArg.args.begin(); it!=transferArg.args.end(); it++) {
+        if (it->type==1) {
+            it->type=-1;
+        }
+        if (it->type==2) {
+            it->type=-2;
+        }
+        if (it->type==3) {
+            it->type=int(it->Vstring.size());
+        }
+//        if (it->type==-1) then its still -1
+    }
+}
+
 void analyze(string s)
 {
     TransferArguments transferArg;
@@ -146,9 +162,10 @@ void analyze(string s)
         }
         
         // start to run API
+        changeIntoNewType(transferArg);
         printTransferArguments(transferArg);
         cout<<"print finished"<<endl;
-        
+
         APICreateTable(transferArg);
     }
     if (s.find("drop table")==0)
