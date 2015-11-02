@@ -2,7 +2,7 @@
 
 /**
  * constructor of CatalogManager
- * it ensures that there are two files:'table_catalog' & 'index_catalog' in directory 'catalogs' 
+ * it ensures that there are two files:'table_catalog' & 'index_catalog' in directory 'catalogs'
  */
 CatalogManager::CatalogManager()
 {
@@ -62,7 +62,7 @@ bool CatalogManager::createTableInfo(TransferArguments * args)
 	ofstream fout;
 	fout.open(pathName, fstream::app);
 	if (fout) {
-		fout << args->tableName << endl;	
+		fout << args->tableName << endl;
 		fout << args->args.size() << endl;
 		fout << args->primary_key << endl;
 		for (vector<Value>::iterator it = args->args.begin(); it != args->args.end(); it++) {
@@ -70,7 +70,7 @@ bool CatalogManager::createTableInfo(TransferArguments * args)
 		}
 
 		addIndexInfo(args->tableName+"_primary_key_index", args->tableName, args->primary_key);
-		addTableInfo(args->tableName);  
+		addTableInfo(args->tableName);
 		fout.close();
 		return true;
 	}
@@ -80,7 +80,7 @@ bool CatalogManager::createTableInfo(TransferArguments * args)
 	}
 }
 
-/** 
+/**
  * Drop the tableinfo of a table needs 3 things to do:
  *		1.update index_catalog
  *		2.update table_catalog
@@ -151,8 +151,8 @@ bool CatalogManager::dropTableInfo(string tableName)
 	}
 }
 
-/** 
- * Drop an index info by index name 
+/**
+ * Drop an index info by index name
  */
 bool CatalogManager::dropIndexInfo(string indexName)
 {
@@ -184,7 +184,7 @@ bool CatalogManager::dropIndexInfo(string indexName)
 	}
 }
 
-/** 
+/**
  * Add  an index info to index_catalog
  * Each line of index_catalog is an index info
  * There are 3 values divided by tab:
@@ -205,7 +205,7 @@ bool CatalogManager::addIndexInfo(string indexName, string tableName, string att
 	}
 }
 
-/** 
+/**
  * Add a table info to table_catalog
  * Each line of table_catalog is an table info
  * There are only 1 value:
@@ -341,8 +341,8 @@ string CatalogManager::getIndexName(string tableName, string attributeName)
 	}
 }
 
-/** 
- * Check one attribute in a table 
+/**
+ * Check one attribute in a table
  * 		return 2: primary, also unique
  * 		return 1: unique
  * 		return 0: exist but not unique
@@ -388,10 +388,10 @@ int CatalogManager::checkAttribute(string tableName, string attributeName)
  */
 string CatalogManager::getTableInfoPathName(string tableName)
 {
-	return "./catalogs/"+tableName;
+	return "catalogs_"+tableName;
 }
 
-/** 
+/**
  * Get all attributes' names of a table
  * When print the result of select statement,
  * we need to print the table head first
@@ -422,7 +422,7 @@ vector<string> CatalogManager::getAttributeNames(string tableName)
 	return attributeNames;
 }
 
-/** 
+/**
  * Get all attributes' types of a table
  */
 vector<int> CatalogManager::getAttributeTypes(string tableName)
@@ -490,7 +490,7 @@ int CatalogManager::getAttributeType(string tableName, string attributeName)
  */
 pair<int, int> CatalogManager::getAttributePos(string tableName, string attributeName)
 {
-	int pos=0, size;  
+	int pos=0, size;
 	pair<int, int>p(0,0);
 	string pathName = getTableInfoPathName(tableName);
 	ifstream fin;
@@ -498,7 +498,7 @@ pair<int, int> CatalogManager::getAttributePos(string tableName, string attribut
 	if (fin) {
 		string s;
 		vector<string> vs;
-		
+
 		for (int i = 0; i < tableInfoLines; i++) {
 			getline(fin, s);
 		}
@@ -522,5 +522,3 @@ pair<int, int> CatalogManager::getAttributePos(string tableName, string attribut
 		return p;
 	}
 }
-
-

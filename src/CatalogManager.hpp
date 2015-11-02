@@ -8,9 +8,9 @@
 
 using namespace std;
 const int tableInfoLines = 3;
-const string tableCatalog = "./catalogs/table_catalog";
-const string indexCatalog = "./catalogs/index_catalog";
-const string tempFile = "./catalogs/temp_file";
+const string tableCatalog = "catalogs_table_catalog";
+const string indexCatalog = "catalogs_index_catalog";
+const string tempFile = "catalogs_temp_file";
 
 class CatalogManager
 {
