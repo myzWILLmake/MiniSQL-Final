@@ -82,7 +82,7 @@ KeyValue::KeyValue(Value v)
 	switch (v.type)
 	{
 	case -1: i = v.Vint; break;
-	case 0: f = v.Vdouble; break;
+	case 0: f = v.Vfloat; break;
 	default: s = v.Vstring; break;
 	}
 	type = v.type;

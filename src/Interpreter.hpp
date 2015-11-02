@@ -12,6 +12,7 @@
 #include <cstdio>
 #include <string>
 #include <vector>
+#include "API.hpp"
 using namespace std;
 string sqlRead(istream&);
 void analyze(string s);

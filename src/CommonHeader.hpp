@@ -19,18 +19,18 @@ class Value
 public:
     string Vname;
     int Vint;
-    double Vdouble;
+    double Vfloat;
     string Vstring;
     int type;   // 1=int 2=float 3=string -1=unknown
     bool unique;
     bool primary;
     string op; //=	<>	<	>	<=	>=
-    Value(int type):Vint(0),Vdouble(0)
+    Value(int type):Vint(0),Vfloat(0)
     {
         this->type=type;
         unique=primary=false;
     }
-    Value():Vint(0),Vdouble(0)
+    Value():Vint(0),Vfloat(0)
     {
         type=-1;
         unique=primary=false;

@@ -8,6 +8,7 @@
 
 #include "Interpreter.hpp"
 #include "CommonHeader.hpp"
+#include "API.hpp"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -89,7 +90,7 @@ void printTransferArguments(TransferArguments transferArg)
     for (vector<Value>::iterator it=transferArg.args.begin(); it!=transferArg.args.end(); it++) {
         cout<<"name="<<it->Vname<<endl;
         cout<<"type="<<it->type<<endl;
-        cout<<"int="<<it->Vint<<" float="<<it->Vdouble<<" Vstring="<<it->Vstring<<" op= "<<it->op<<endl;
+        cout<<"int="<<it->Vint<<" float="<<it->Vfloat<<" Vstring="<<it->Vstring<<" op= "<<it->op<<endl;
         cout<<"unique="<<it->unique<<" primary="<<it->primary<<endl<<endl;
     }
 }
@@ -215,7 +216,7 @@ void analyze(string s)
                 new_element.Vstring=sSec_value1[0];
             }   else
             {
-                new_element.Vdouble=stod(value1);
+                new_element.Vfloat=stod(value1);
                 new_element.Vint=stoi(value1);
             }
             transferArg.args.push_back(new_element);
@@ -240,7 +241,7 @@ void analyze(string s)
                 new_element.Vstring=sSec_it[0];
             }   else
             {
-                new_element.Vdouble=stod(*it);
+                new_element.Vfloat=stod(*it);
                 new_element.Vint=stoi(*it);
             }
             transferArg.args.push_back(new_element);
@@ -279,7 +280,7 @@ void analyze(string s)
                 new_element.Vstring=sSec_value1[0];
             }   else
             {
-                new_element.Vdouble=stod(value1);
+                new_element.Vfloat=stod(value1);
                 new_element.Vint=stoi(value1);
             }
             transferArg.args.push_back(new_element);
