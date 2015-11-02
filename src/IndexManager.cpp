@@ -1,12 +1,13 @@
 #include "IndexManager.hpp"
 #include "BPlusTree.hpp"
 #include "RecordManager.hpp"
+#include "API.hpp"
 #include <utility>
 #include <algorithm>
 
 using namespace std;
 
-IndexManager::IndexManager():cm()
+IndexManager::IndexManager()
 {
 }
 

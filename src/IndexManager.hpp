@@ -13,9 +13,6 @@ using namespace std;
 class RecordManager;
 
 class IndexManager {
-private:
-    CatalogManager *cm;
-    RecordManager *rm;
 
 public:
     // constructor
