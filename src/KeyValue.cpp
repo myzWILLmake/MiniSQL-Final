@@ -75,6 +75,7 @@ KeyValue::KeyValue(float init): f(init), type(0)
 
 KeyValue::KeyValue(string init, int len): s(init), type(len)
 {
+	s.resize(len);
 }
 
 KeyValue::KeyValue(Value v)

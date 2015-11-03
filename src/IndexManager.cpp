@@ -15,7 +15,7 @@ bool IndexManager::addIndex(string table, string attr)
 {
 	vector<pair<Value, int> > tmp;
 	vector<pair<KeyValue, int> > init;
-	BPlusTree BT(table, attr, CREATE_TREE);
+	BPlusTree BT(table, attr, cm->getAttributeType(table, attr), CREATE_TREE);
 	rm->getKeysOffsets(table, attr, tmp);// get record-offset pairs from RecordManager
 	if (tmp.size() > 0)// if there exist some records already
 	{
@@ -54,7 +54,7 @@ bool IndexManager::dropIndex(string table, string attr)
 		cout << "Error visiting non-existent index on attribute \'" << attr << "\' of table \'" << table << "\'" << endl;
 		exit(0);
 	}
-	BPlusTree BT(table, attr, FETCH_TREE);
+	BPlusTree BT(table, attr, cm->getAttributeType(table, attr), FETCH_TREE);
 	BT.destroy();
 	return true;
 }
@@ -66,7 +66,7 @@ bool IndexManager::insertUpdate(string table, string attr, KeyValue value, int o
 		cout << "Error visiting non-existent index on attribute \'" << attr << "\' of table \'" << table << "\'" << endl;
 		exit(0);
 	}
-	BPlusTree BT(table, attr, FETCH_TREE);
+	BPlusTree BT(table, attr, cm->getAttributeType(table, attr), FETCH_TREE);
 	switch (BT.insert(value, offset))
 	{
 	case INSERT_SUCCESS:
@@ -85,7 +85,7 @@ bool IndexManager::deleteUpdate(string table, string attr, KeyValue value)
 		cout << "Error visiting non-existent index on attribute \'" << attr << "\' of table \'" << table << "\'" << endl;
 		exit(0);
 	}
-	BPlusTree BT(table, attr, FETCH_TREE);
+	BPlusTree BT(table, attr, cm->getAttributeType(table, attr), FETCH_TREE);
 	switch (BT.remove(value))
 	{
 	case REMOVE_SUCCESS:
@@ -103,7 +103,7 @@ vector<int> IndexManager::retrieve(string table, string attr, KeyValue lower, bo
 		cout << "Error visiting non-existent index on attribute \'" << attr << "\' of table \'" << table << "\'" << endl;
 		exit(0);
 	}
-	BPlusTree BT(table, attr, FETCH_TREE);
+	BPlusTree BT(table, attr, cm->getAttributeType(table, attr), FETCH_TREE);
 	return BT.search(lower, lowerIn, upper, upperIn);
 }
 

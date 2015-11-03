@@ -1,6 +1,7 @@
 #include "BPlusTree.hpp"
 #include "CatalogManager.hpp"
 #include "BufferManager.hpp"
+#include "API.hpp"
 #include <iostream>
 #include <vector>
 #include <map>
@@ -8,10 +9,11 @@
 
 using namespace std;
 
-BPlusTree::BPlusTree(string table, string attr, int mode):bm(), cm()
+BPlusTree::BPlusTree(string table, string attr, int type, int mode)
 {
 	this->table = table;
 	this->attr = attr;
+    /*
 	this->type = cm.getAttributeType(table, attr);
 	int key_size;
 	if (cm.getAttributeType(table, attr) > 0)
@@ -20,18 +22,31 @@ BPlusTree::BPlusTree(string table, string attr, int mode):bm(), cm()
 		key_size = sizeof(int);
 	else if (cm.getAttributeType(table, attr) == 0)
 		key_size = sizeof(float);
+     */
+    this->type = type;
+    int key_size;
+    if (type > 0)
+        key_size = type;
+    else if (type == -1)
+        key_size = sizeof(int);
+    else if (type == 0)
+        key_size = sizeof(float);
 	else
 	{
 		cout << "Type Error when constructing BPlusTree." << endl;
 		exit(0);
 	}
-	this->max_key_num = (0x1000 - sizeof(int) * 6 - sizeof(int) * 2) / (key_size + sizeof(int)) - 1;
+	/*
+    //DEBUG
+    this->max_key_num = 5;
+    */
+	this->max_key_num = (0x1000 - sizeof(int) * 6 - sizeof(bool) * 2) / (key_size + sizeof(int)) - 1;
 	
 	if (mode == CREATE_TREE)
 	{
-		blocks[0] = bm.getIndexNewBlock(table, attr);
+		blocks[0] = bm->getIndexNewBlock(table, attr);
 		set_pin(0);
-		nodes[0] = new Node();
+		nodes[0] = new Node(0);
 		nodes[0]->parent = -1;
 		nodes[0]->next = -1;
 		nodes[0]->prev = -1;
@@ -46,9 +61,12 @@ BPlusTree::BPlusTree(string table, string attr, int mode):bm(), cm()
 	}
 	else if (mode == FETCH_TREE)
 	{
-		blocks[0] = bm.getIndexBlock(table, attr, 0);
+		blocks[0] = bm->getIndexBlock(table, attr, 0);
+        /*
 		nodes[0] = new Node(blocks[0]->address, cm.getAttributeType(table, attr));
-	}
+         */
+        nodes[0] = new Node(blocks[0]->address, type);
+    }
 	else
 	{
 		cout << "Unexpected opening mode in BPlusTree constructor." << endl;
@@ -57,7 +75,7 @@ BPlusTree::BPlusTree(string table, string attr, int mode):bm(), cm()
 }
 
 // constructor for debugging
-BPlusTree::BPlusTree(int max):bm(), cm()
+BPlusTree::BPlusTree(int max)
 {
 	max_key_num = max;
 }
@@ -77,9 +95,11 @@ void BPlusTree::fetch(int block_num)
 	{
 		// fetch block from BufferManager
 		// Initialize the node
-		blocks[block_num] = bm.getIndexBlock(table, attr, block_num);
+		blocks[block_num] = bm->getIndexBlock(table, attr, block_num);
+        /*
 		nodes[block_num] = new Node(blocks[block_num]->address, cm.getAttributeType(table, attr));
-
+         */
+        nodes[block_num] = new Node(blocks[block_num]->address, type);
 		//DEBUG
 		//  
 		//  if (block_num == 0)
@@ -122,21 +142,28 @@ void BPlusTree::write_back(int block_num)
 	{
 		nodes[block_num]->keys[i].output(p);
 	}
-	for (int i = nodes[block_num]->is_leaf ? 0 : -1; i < nodes[block_num]->key_num; i++)
+	for (int i = 0; i < nodes[block_num]->key_num; i++)
 	{
 		*((int *)p) = nodes[block_num]->offsets[i];
 		p += sizeof(int);
 	}
+    if (!nodes[block_num]->is_leaf)
+    {
+        *((int *)p) = nodes[block_num]->offsets.back();
+        p += sizeof(int);
+    }
 }
 
 void BPlusTree::set_pin(int block_num)
 {
-	blocks[block_num]->pin = true;
+    if (blocks.find(block_num) != blocks.end())
+        blocks[block_num]->pin = true;
 }
 
 void BPlusTree::reset_pin(int block_num)
 {
-	blocks[block_num]->pin = false;
+    if (blocks.find(block_num) != blocks.end())
+        blocks[block_num]->pin = false;
 }
 
 void BPlusTree::release(int block_num)
@@ -229,7 +256,9 @@ void BPlusTree::split(int block_num)
 {
 	Node *cur_node = nodes[block_num];
 	// create a new node
-	Node *new_node = new Node();
+    IndexBlock *tmp = bm->getIndexNewBlock(table, attr);
+    blocks[tmp->blockNo] = tmp;
+	Node *new_node = new Node(tmp->blockNo);
 	nodes[new_node->block_num] = new_node;
 	set_pin(new_node->block_num);
 	new_node->parent = cur_node->parent;
@@ -285,7 +314,9 @@ void BPlusTree::split(int block_num)
 	// if the node is root
 	if (cur_node->is_root)
 	{
-		Node *tmp_node = new Node();
+        IndexBlock *tmp = bm->getIndexNewBlock(table, attr);
+        blocks[tmp->blockNo] = tmp;
+		Node *tmp_node = new Node(tmp->blockNo);
 		nodes[tmp_node->block_num] = tmp_node;
 		set_pin(tmp_node->block_num);
 
@@ -436,6 +467,13 @@ int BPlusTree::recur_remove(int block_num, KeyValue key)
 				break;
 		}
 		int result = recur_remove(cur_node->offsets[i], key);
+        // if cur_node is NULL
+        // the only situation is that the root node collapse
+        if (nodes.find(block_num) == nodes.end())
+        {
+            fetch(0);
+            cur_node = nodes[0];
+        }
 		for (i = 0; i < cur_node->key_num; i++)
 		{
 			if (cur_node->keys[i] > key)
@@ -605,6 +643,12 @@ void BPlusTree::redistribute(int block_num)
 				sbl_node->key_num -= copy_num;
 			}
 		}
+        write_back(prt_node->block_num);
+        write_back(sbl_node->block_num);
+        write_back(cur_node->block_num);
+        reset_pin(prt_node->block_num);
+        reset_pin(sbl_node->block_num);
+        reset_pin(cur_node->block_num);
 	}
 	else // merge with sibling node
 	{
@@ -784,7 +828,11 @@ void BPlusTree::redistribute(int block_num)
 			}
 		}
 		recycle(sbl_node->block_num);
-		prt_node->key_num -= 1;
+        prt_node->key_num -= 1;
+        write_back(prt_node->block_num);
+        write_back(cur_node->block_num);
+        reset_pin(prt_node->block_num);
+        reset_pin(cur_node->block_num);
 		if (prt_node->is_root)
 		{
 			if (prt_node->key_num == 0)
@@ -812,6 +860,8 @@ void BPlusTree::redistribute(int block_num)
 				prt_node->offsets.swap(cur_node->offsets);
 
 				recycle(cur_node->block_num);
+                write_back(prt_node->block_num);
+                reset_pin(prt_node->block_num);
 			}
 		}
 		else if (prt_node->key_num * 2 < max_key_num)
@@ -829,7 +879,7 @@ void BPlusTree::recycle(int block_num)
 			delete nodes[block_num];
 		nodes.erase(block_num);
 		reset_pin(block_num);
-		bm.deleteIndexBlock(table, attr, block_num);
+		bm->deleteIndexBlock(table, attr, block_num);
 		blocks.erase(block_num);
 	}
 }
@@ -846,12 +896,11 @@ KeyValue BPlusTree::find_min(int block_num)
 
 bool BPlusTree::build(vector<pair<KeyValue, int> > init)
 {
-	/*
 	for (vector<pair<KeyValue, int> >::iterator iter = init.begin(); iter != init.end(); iter++)
 	{
 		insert(iter->first, iter->second);
 	}
-	*/
+    /*
 	if (init.size() <= max_key_num)
 	{
 		fetch(0);
@@ -873,10 +922,10 @@ bool BPlusTree::build(vector<pair<KeyValue, int> > init)
 		int prev = -1;
 		for (int i = 0; i < n/max_key_num-1; i++)
 		{
-			IndexBlock *tmp = bm.getIndexNewBlock(table, attr);
+			IndexBlock *tmp = bm->getIndexNewBlock(table, attr);
 			set_pin(tmp->blockNo);
 			blocks[tmp->blockNo] = tmp;
-			nodes[tmp->blockNo] = new Node();
+			nodes[tmp->blockNo] = new Node(tmp->blockNo);
 			Node *cur_node = nodes[tmp->blockNo];
 			cur_node->prev = prev;
 			cur_node->block_num = tmp->blockNo;
@@ -899,10 +948,10 @@ bool BPlusTree::build(vector<pair<KeyValue, int> > init)
 		}
 		for (int n = init.size()/2; init.size() != 0; n = init.size())
 		{
-			IndexBlock *tmp = bm.getIndexNewBlock(table, attr);
+			IndexBlock *tmp = bm->getIndexNewBlock(table, attr);
 			set_pin(tmp->blockNo);
 			blocks[tmp->blockNo] = tmp;
-			nodes[tmp->blockNo] = new Node();
+			nodes[tmp->blockNo] = new Node(tmp->blockNo);
 			Node *cur_node = nodes[tmp->blockNo];
 			cur_node->prev = prev;
 			cur_node->block_num = tmp->blockNo;
@@ -922,6 +971,7 @@ bool BPlusTree::build(vector<pair<KeyValue, int> > init)
 		}
 		recur_build(children);
 	}
+     */
 	return true;
 }
 
@@ -956,10 +1006,10 @@ bool BPlusTree::recur_build(vector<pair<KeyValue, int> > init)
 		int prev = -1;
 		for (int i = 0; i < n / (max_key_num+1) - 1; i++)
 		{
-			IndexBlock *tmp = bm.getIndexNewBlock(table, attr);
+			IndexBlock *tmp = bm->getIndexNewBlock(table, attr);
 			set_pin(tmp->blockNo);
 			blocks[tmp->blockNo] = tmp;
-			nodes[tmp->blockNo] = new Node();
+			nodes[tmp->blockNo] = new Node(tmp->blockNo);
 			Node *cur_node = nodes[tmp->blockNo];
 			cur_node->prev = prev;
 			cur_node->block_num = tmp->blockNo;
@@ -987,10 +1037,10 @@ bool BPlusTree::recur_build(vector<pair<KeyValue, int> > init)
 		}
 		for (int n = init.size() / 2; init.size() != 0; n = init.size())
 		{
-			IndexBlock *tmp = bm.getIndexNewBlock(table, attr);
+			IndexBlock *tmp = bm->getIndexNewBlock(table, attr);
 			set_pin(tmp->blockNo);
 			blocks[tmp->blockNo] = tmp;
-			nodes[tmp->blockNo] = new Node();
+			nodes[tmp->blockNo] = new Node(tmp->blockNo);
 			Node *cur_node = nodes[tmp->blockNo];
 			cur_node->prev = prev;
 			cur_node->block_num = tmp->blockNo;
@@ -1058,6 +1108,7 @@ void BPlusTree::recur_search(int block_num, vector<int> &indices, KeyValue lower
 		while (upperIn ? cur_node->keys[i] <= upper : cur_node->keys[i] < upper)
 		{
 			indices.push_back(cur_node->offsets[i]);
+            i++;
 			if (i == cur_node->key_num && cur_node->next != -1)
 			{
 				fetch(cur_node->next);
@@ -1086,70 +1137,96 @@ void BPlusTree::recur_search(int block_num, vector<int> &indices, KeyValue lower
 	}
 }
 
+void BPlusTree::recur_print(int block_num)
+{
+    fetch(block_num);
+    for (int i = 0; !nodes[block_num]->is_leaf && i < nodes[block_num]->offsets.size(); i++)
+        recur_print(nodes[block_num]->offsets[i]);
+    map<int, Node *>::iterator map_iter = nodes.find(block_num);
+    for (; map_iter != nodes.end(); map_iter = nodes.end())
+    {
+        if (map_iter->first != map_iter->second->block_num)
+        {
+            cout << "block_num mismatch in node" << map_iter->first << endl;
+        }
+        if (map_iter->second->key_num != map_iter->second->keys.size())
+        {
+            cout << "key_num mismatch in node" << map_iter->first << endl;
+        }
+        if (!map_iter->second->is_leaf && map_iter->second->parent != -1)
+        {
+            fetch(map_iter->second->parent);
+            if (nodes[map_iter->second->parent]->offsets[map_iter->second->child_num] != map_iter->second->block_num)
+            {
+                cout << "parent or child_num mismatch in node" << map_iter->first << endl;
+            }
+        }
+        if (map_iter->second->parent == -1 && !map_iter->second->is_root)
+        {
+            cout << "parent mismatch in node" << map_iter->first << endl;
+        }
+        if (map_iter->second->next != -1)
+        {
+            fetch(map_iter->second->next);
+            if (nodes[map_iter->second->next]->prev != map_iter->second->block_num)
+            {
+                cout << "next mismatch in node" << map_iter->first << endl;
+            }
+        }
+        if (map_iter->second->prev != -1)
+        {
+            fetch(map_iter->second->prev);
+            if (nodes[map_iter->second->prev]->next != map_iter->second->block_num)
+            {
+                cout << "prev mismatch in node" << map_iter->first << endl;
+            }
+        }
+        
+        cout << "block_num: " << map_iter->first << endl;
+        cout << "parent: " << map_iter->second->parent << endl;
+        cout << "is_leaf: " << map_iter->second->is_leaf << endl;
+        cout << "is_root: " << map_iter->second->is_root << endl;
+        cout << "child_num: " << map_iter->second->child_num << endl;
+        cout << "key_num: " << map_iter->second->key_num << endl;
+        cout << "next: " << map_iter->second->next << endl;
+        cout << "prev: " << map_iter->second->prev << endl;
+        cout << "keys: " << endl;
+        
+        vector<KeyValue>::iterator keys_iter = map_iter->second->keys.begin();
+        for (; keys_iter != map_iter->second->keys.end(); keys_iter++)
+        {
+            cout << *keys_iter << ' ';
+        }
+        cout << endl;
+        
+        cout << "offsets: " << endl;
+        vector<int>::iterator offsets_iter = map_iter->second->offsets.begin();
+        for (int i = 0; offsets_iter != map_iter->second->offsets.end(); offsets_iter++, i++)
+        {
+            if (!map_iter->second->is_leaf)
+            {
+                fetch(*offsets_iter);
+                if (nodes[*offsets_iter]->child_num != i)
+                {
+                    cout << "child_num mismatch in node" << *offsets_iter << endl;
+                }
+            }
+            cout << *offsets_iter << ' ';
+        }
+        cout << endl;
+        
+        cout << endl;
+    }
+    
+}
+
 // print tree for debugging
 void BPlusTree::print()
 {
-	map<int, Node *>::iterator map_iter = nodes.begin();
-	cout << "-----------------------START PRINTING-----------------------" << endl;
-	for (; map_iter != nodes.end(); map_iter++)
-	{
-		if (map_iter->first != map_iter->second->block_num)
-		{
-			cout << "block_num mismatch in node" << map_iter->first << endl;
-		}
-		if (map_iter->second->key_num != map_iter->second->keys.size())
-		{
-			cout << "key_num mismatch in node" << map_iter->first << endl;
-		}
-		if (!map_iter->second->is_leaf && map_iter->second->parent != -1 && nodes[map_iter->second->parent]->offsets[map_iter->second->child_num] != map_iter->second->block_num)
-		{
-			cout << "parent or child_num mismatch in node" << map_iter->first << endl;
-		}
-		if (map_iter->second->parent == -1 && !map_iter->second->is_root)
-		{
-			cout << "parent mismatch in node" << map_iter->first << endl;
-		}
-		if (map_iter->second->next != -1 && nodes[map_iter->second->next]->prev != map_iter->second->block_num)
-		{
-			cout << "next mismatch in node" << map_iter->first << endl;
-		}
-		if (map_iter->second->prev != -1 && nodes[map_iter->second->prev]->next != map_iter->second->block_num)
-		{
-			cout << "prev mismatch in node" << map_iter->first << endl;
-		}
-
-		cout << "block_num: " << map_iter->first << endl;
-		cout << "parent: " << map_iter->second->parent << endl;
-		cout << "is_leaf: " << map_iter->second->is_leaf << endl;
-		cout << "is_root: " << map_iter->second->is_root << endl;
-		cout << "child_num: " << map_iter->second->child_num << endl;
-		cout << "key_num: " << map_iter->second->key_num << endl;
-		cout << "next: " << map_iter->second->next << endl;
-		cout << "prev: " << map_iter->second->prev << endl;
-		cout << "keys: " << endl;
-
-		vector<KeyValue>::iterator keys_iter = map_iter->second->keys.begin();
-		for (; keys_iter != map_iter->second->keys.end(); keys_iter++)
-		{
-			cout << *keys_iter << ' ';
-		}
-		cout << endl;
-
-		cout << "offsets: " << endl;
-		vector<int>::iterator offsets_iter = map_iter->second->offsets.begin();
-		for (int i = 0; offsets_iter != map_iter->second->offsets.end(); offsets_iter++, i++)
-		{
-			if (!map_iter->second->is_leaf && nodes[*offsets_iter]->child_num != i)
-			{
-				cout << "child_num mismatch in node" << *offsets_iter << endl;
-			}
-			cout << *offsets_iter << ' ';
-		}
-		cout << endl;
-		
-		cout << endl;
-	}
-	cout << "------------------------------------------------------------" << endl;
+    cout << "-----------------------START PRINTING-----------------------" << endl;
+    recur_print(0);
+    release_unpinned();
+    cout << "------------------------------------------------------------" << endl;
 }
 
 // print tree for debugging
@@ -1179,6 +1256,7 @@ void BPlusTree::draw()
 			if (cur == 0)
 				to_draw.push_back(-3);
 			int i;
+            fetch(cur);
 			Node *n = nodes[cur];
 			for (i = 0; i < n->keys.size(); i++)
 			{
@@ -1288,13 +1366,10 @@ Node::Node(char *p, int type)
 			p += sizeof(float);
 			break;
 		default:
-			for (int j = 0; j < type; j++)
-			{
-				string s;
-				s.append(p);
-				p += type;
-				keys.push_back(KeyValue(s, type));
-			}
+            string s;
+            s.append(p);
+            p += type;
+            keys.push_back(KeyValue(s, type));
 			break;
 		}
 	}
@@ -1305,10 +1380,10 @@ Node::Node(char *p, int type)
 	}
 }
 
-Node::Node()
+Node::Node(int block_num)
 {
 	//TODO
-	
+    this->block_num = block_num;
 	// DEBUG
 	// block_num = i;
 	// i++;

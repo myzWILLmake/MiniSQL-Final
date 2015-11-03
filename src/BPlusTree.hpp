@@ -1,5 +1,5 @@
-#ifndef BPLUSTREE_H
-#define BPLUSTREE_H
+#ifndef BPLUSTREE_HPP
+#define BPLUSTREE_HPP
 
 #define CREATE_TREE 0
 #define FETCH_TREE  1
@@ -36,7 +36,7 @@ class Node {
 	vector<KeyValue> keys;
 	vector<int> offsets;
 
-	Node();// create a new node; will call BufferManager for a new block
+	Node(int block_num);// create a new node; will call BufferManager for a new block
 	Node(char *p, int type);// starting address of the memory block storing the node information
 };
 
@@ -50,15 +50,14 @@ private:
 	map<int, Node *> nodes;
 	map<int, IndexBlock *> blocks;
 
-	BufferManager bm;
-	CatalogManager cm;
-
 public:
 	// initialize the tree
 	// mode:
 	// 		CREATE_TREE: create a new tree and correspoding file
 	//		FETCH_TREE: fetch an existing tree from file
-	BPlusTree(string table, string attr, int mode);
+    //
+    // Note: 'type' should be cm.getAttributeType(table, attr); 
+	BPlusTree(string table, string attr, int type, int mode);
 
 	// constructor for debugging
 	BPlusTree(int max);
@@ -141,6 +140,9 @@ private:
 
 	// delete the block and its children
 	void recur_destroy(int block_num);
+    
+    // print the tree recursively
+    void recur_print(int block_num);
 };
 
-#endif /* BPLUSTREE_H */
+#endif /* BPLUSTREE_HPP */

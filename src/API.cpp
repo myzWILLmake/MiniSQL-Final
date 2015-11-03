@@ -21,10 +21,10 @@ BufferManager * bm;
 
 void init()
 {
-    CatalogManager * cm = new CatalogManager();
-    IndexManager * im = new IndexManager();
-    RecordManager * rm = new RecordManager();
-    BufferManager * bm = new BufferManager();
+    cm = new CatalogManager();
+    im = new IndexManager();
+    rm = new RecordManager();
+    bm = new BufferManager();
 }
 
 void APICreateTable(TransferArguments transferArg)
