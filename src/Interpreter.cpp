@@ -102,10 +102,10 @@ void changeIntoNewType(TransferArguments &transferArg)
             it->type=-1;
         }
         if (it->type==2) {
-            it->type=-2;
+            it->type=0;
         }
         if (it->type==3) {
-            it->type=128;
+            it->type=32;
         }
 //        if (it->type==-1) then its still -1
     }
@@ -164,9 +164,10 @@ void analyze(string s)
         // start to run API
         changeIntoNewType(transferArg);
         printTransferArguments(transferArg);
-        cout<<"print finished"<<endl;
+        cout<<"interpreter print finished"<<endl;
 
         APICreateTable(transferArg);
+        cout<<"executed successfully"<<endl;
     }
     if (s.find("drop table")==0)
     {
@@ -268,7 +269,11 @@ void analyze(string s)
         }
         
         // start to run API
+        changeIntoNewType(transferArg);
         printTransferArguments(transferArg);
+        cout<<"interpreter print finished"<<endl;
+        APIInsertInto(transferArg);
+        cout<<"executed successfully"<<endl;
     }
     if (s.find("delete from")==0) {
         cout<<"this is delete from\n";

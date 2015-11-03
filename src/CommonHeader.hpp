@@ -19,7 +19,7 @@ class Value
 public:
     string Vname;
     int Vint;
-    double Vfloat;
+    float Vfloat;
     string Vstring;
     int type;   // 1=int 2=float 3=string -1=unknown
     bool unique;
