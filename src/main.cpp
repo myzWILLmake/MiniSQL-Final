@@ -25,6 +25,10 @@ int main(int argc, const char * argv[]) {
             break;
         }
     }
+    delete bm;
+    delete cm;
+    delete rm;
+    delete im;
     return 0;
 }
 
