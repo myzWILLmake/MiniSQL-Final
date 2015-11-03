@@ -218,7 +218,7 @@ Block* BufferManager::getFirstBlock(std::string tableName) {
  * @param   blockNoew   block pointer pointing to the curren block
  * @return              block pointer
  */
-Block* BufferManager::getNextBlock(Block *blockNow) {
+Block* BufferManager::getNextBlock(Block *blockNow, int mode) {
     Block* returnPtr = NULL;
     std::string nextBlockFileName = blockNow->tableName + "_" + formatNotoString(blockNow->blockNo + 1);
     if (recordBlockMap.find(nextBlockFileName) != recordBlockMap.end()) {
@@ -245,20 +245,24 @@ Block* BufferManager::getNextBlock(Block *blockNow) {
         } else {
             // Doesn't exist
             // Need to create the next block file
-            std::ofstream fout;
-            fout.open(nextBlockFileName, std::ios::out | std::ios::binary);
-            if (fout) {
-                Block* tmpBlock = getBlockFromRecordBlockPool();
-                for (int i=0; i<EACH_BLOCK_RECORDS; i++) {
-                    tmpBlock->records[i].empty = true;
+            if (mode == INSERT_MODE) {
+                std::ofstream fout;
+                fout.open(nextBlockFileName, std::ios::out | std::ios::binary);
+                if (fout) {
+                    Block* tmpBlock = getBlockFromRecordBlockPool();
+                    for (int i=0; i<EACH_BLOCK_RECORDS; i++) {
+                        tmpBlock->records[i].empty = true;
+                    }
+                    fout.write((char*)tmpBlock->records, sizeof(tmpBlock->records));
+                    tmpBlock->recordNum = 0;
+                    tmpBlock->blockNo = blockNow->blockNo + 1;
+                    tmpBlock->tableName = blockNow->tableName;
+                    recordBlockMap[nextBlockFileName] = tmpBlock;
+                    returnPtr = tmpBlock;
+                    fout.close();
+                } else {
+                    returnPtr = NULL;
                 }
-                fout.write((char*)tmpBlock->records, sizeof(tmpBlock->records));
-                tmpBlock->recordNum = 0;
-                tmpBlock->blockNo = blockNow->blockNo + 1;
-                tmpBlock->tableName = blockNow->tableName;
-                recordBlockMap[nextBlockFileName] = tmpBlock;
-                returnPtr = tmpBlock;
-                fout.close();
             }
         }
     }
