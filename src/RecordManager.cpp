@@ -42,7 +42,7 @@ bool RecordManager::insertRecord(string tableName, Record& record, int &offset)
 	Block *block = bm->getFirstBlock(tableName);
 	// get a block not full
 	while (block!=NULL && block->recordNum>=EACH_BLOCK_RECORDS) {
-		block = bm->getNextBlock(block);
+		block = bm->getNextBlock(block, INSERT_MODE);
 	}	
 	int i;
 	for ( i = 0; i < EACH_BLOCK_RECORDS; i++) { 
@@ -149,7 +149,7 @@ bool RecordManager::deleteRecord(string tableName, vector<Value> &inputCondition
 						}
 					}
 				}
-				block = bm->getNextBlock(block);
+				block = bm->getNextBlock(block, SELECT_MODE);
 			}
 		}
 	}
@@ -261,7 +261,7 @@ bool RecordManager::selectRecord(string tableName, vector<Value> &inputCondition
 						}
 					}
 				}
-				block = bm->getNextBlock(block);
+				block = bm->getNextBlock(block, SELECT_MODE);
 			}
 			if (flag3 == 0){
 				cout << "No records found." << endl;
@@ -311,7 +311,7 @@ bool RecordManager::getKeysOffsets(string tableName, string attributeName, vecto
 				tmp.push_back(pair<Value, int>(value, offset));
 			}
 		}
-		block = bm->getNextBlock(block);
+		block = bm->getNextBlock(block, SELECT_MODE);
 	}
 	return true;
 }
