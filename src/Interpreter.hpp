@@ -17,7 +17,6 @@ using namespace std;
 string sqlRead(istream&);
 void analyze(string s);
 
-extern bool sqlExit;
 
 //like split() in python, every word will be stripped automatically, which means the word="   " will not be added.
 vector<string> split(string s, string sign);

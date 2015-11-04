@@ -18,7 +18,6 @@
 #include <set>
 using namespace std;
 
-bool sqlExit=false;
 
 //like strip() in python, reducing the table, space and return
 string strip(string s)
@@ -331,8 +330,7 @@ void analyze(string s)
         cout<<"this is quit\n";
         
         //start to run API
-        
-        sqlExit=true;
+        APIQuit();
     }
 //    cout<<"this is not a sql statement\n";
 }

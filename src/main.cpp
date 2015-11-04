@@ -21,14 +21,8 @@ int main(int argc, const char * argv[]) {
     init();
     while (true) {
         analyze(sqlRead(cin));
-        if (sqlExit) {
-            break;
-        }
     }
-    delete bm;
-    delete cm;
-    delete rm;
-    delete im;
+    
     return 0;
 }
 

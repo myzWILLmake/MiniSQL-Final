@@ -29,6 +29,16 @@ void init()
     bm = new BufferManager();
 }
 
+void APIQuit()
+{
+    delete bm;
+    delete cm;
+    delete rm;
+    delete im;
+    cout<<"exit!"<<endl;
+    exit(0);
+}
+
 void APICreateTable(TransferArguments transferArg)
 {
     if (cm->checkTable(transferArg.tableName)) {

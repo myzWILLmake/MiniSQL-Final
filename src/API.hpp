@@ -29,4 +29,5 @@ extern RecordManager * rm;
 void init();
 void APICreateTable(TransferArguments);
 void APIInsertInto(TransferArguments);
+void APIQuit();
 #endif /* API_hpp */
