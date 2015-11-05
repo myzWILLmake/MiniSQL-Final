@@ -375,5 +375,5 @@ void analyze(string s)
         //start to run API
         APIQuit();
     }
-//    cout<<"this is not a sql statement\n";
+    cout<<"this is not a sql statement\n";
 }
