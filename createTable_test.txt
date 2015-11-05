@@ -1,0 +1,42 @@
+create table student(
+	cgpjk float,
+	bmlttnvumxlvqnkibk int,
+	myoc float,
+	fuojaflmdhilbzdtycy float,
+	xxgomnyrt float,
+	cliqqhdkxm float,
+	vikkpggnxol float,
+	apmikcsfntoswfnnamvd float,
+	cskr char(100),
+	primary key (cskr)
+);
+create table bhtyfaqiqc(
+	xozwlouie char(100),
+	htchponbukxslkvumlzt char(100),
+	primary key (xozwlouie)
+);
+create table fqyweynbrxkjcwyizl(
+	sth int,
+	vsxmfqwomaaahakj float,
+	vey char(100),
+	avni int,
+	tsxlwnupnyontjc char(100),
+	xutu float,
+	hbbqdmnvwetvyoso char(100),
+	primary key (xutu)
+);
+create table qtcqbvtul(
+	veafduriaggvymavk int,
+	primary key (veafduriaggvymavk)
+);
+create table cugadzhlvbojfcesutn(
+	udydwznkgdbzhfn int,
+	rkxfogwocesvaacid int,
+	nivyanxsmtlvx float,
+	shekqnfckvfizrxt int,
+	wtoaxqmgsa float,
+	umlykomrusudilb float,
+	unlehcgyuylbsib int,
+	primary key (shekqnfckvfizrxt)
+);
+quit;
