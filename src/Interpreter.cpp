@@ -113,6 +113,7 @@ void changeIntoNewType(TransferArguments &transferArg)
                 break;
         }
 //        if (it->type==-1) then its still -1
+    }
 }
 
 void analyze(string s)
@@ -205,9 +206,7 @@ void analyze(string s)
         APICreateIndex(transferArg);
     }
     if (s.find("drop index")==0) {
-#ifndef THS_DEBUG
         cout<<"this is drop index\n";
-#endif
         s.erase(0,10);
         s.erase(s.size()-1,1);
         transferArg.indexName=strip(s);
@@ -218,9 +217,7 @@ void analyze(string s)
         APIDropIndex(transferArg);
     }
     if (s.find("select")==0) {
-#ifndef THS_DEBUG
         cout<<"this is select\n";
-#endif
         //delete select * from
         s.erase(0,13);
         
@@ -265,9 +262,7 @@ void analyze(string s)
         APISelect(transferArg);
     }
     if (s.find("insert into")==0) {
-#ifndef THS_DEBUG
         cout<<"this is insert into\n";
-#endif
         s.erase(0,11);
         vector<string> sSec=split(s, "values");
         transferArg.tableName=strip(sSec[0]);
@@ -291,19 +286,13 @@ void analyze(string s)
         // start to run API
         changeIntoNewType(transferArg);
         printTransferArguments(transferArg);
-#ifndef THS_DEBUG
         cout<<"interpreter print finished"<<endl;
-#endif
         APIInsertInto(transferArg);
         
-#ifndef THS_DEBUG
         cout<<"executed successfully"<<endl;
-#endif
     }
     if (s.find("delete from")==0) {
-#ifndef THS_DEBUG
         cout<<"this is delete from\n";
-#endif
         s.erase(0,11);
         vector<string> sSec=split(s, "where");
         transferArg.tableName=strip(sSec[0]);
@@ -343,9 +332,7 @@ void analyze(string s)
         APIDelete(transferArg);
     }
     if (s.find("execfile")==0) {
-#ifndef THS_DEBUG
         cout<<"this is execfile ";
-#endif
         s.erase(0,8);
         s.erase(s.size()-1,1);
         string fileName=strip(s);
@@ -365,12 +352,10 @@ void analyze(string s)
         }
     }
     if (s.find("quit")==0) {
-#ifndef THS_DEBUG
         cout<<"this is quit\n";
-#endif
         
         //start to run API
         APIQuit();
     }
-//    cout<<"this is not a sql statement\n";
+    cout<<"this is not a sql statement\n";
 }
