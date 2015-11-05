@@ -519,3 +519,23 @@ pair<int, int> CatalogManager::getAttributePos(string tableName, string attribut
 		return p;
 	}
 }
+
+void CatalogManager::getIndexInfo(string indexName, string &tableName, string &attributeName){
+    ifstream fin;
+    fin.open(indexCatalog, fstream::in);
+    if (fin) {
+        string s;
+        vector<string> vs;
+        while (!fin.eof()) {
+            getline(fin, s);
+            vs = split(s, "\t");
+            if(vs[0] == indexName){
+                tableName = vs[1];
+                attributeName = vs[2];
+                break;
+            }
+        }
+        fin.close();
+    }
+    return;
+}

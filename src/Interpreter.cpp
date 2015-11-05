@@ -106,6 +106,10 @@ void changeIntoNewType(TransferArguments &transferArg)
         if (it->type==3) {
             it->type=32;
         }
+        if (it->type == -1)
+        {
+            it->type = -2;// unknown type
+        }
 //        if (it->type==-1) then its still -1
     }
 }
@@ -177,6 +181,7 @@ void analyze(string s)
         
         // start to run API
         printTransferArguments(transferArg);
+        APIDropTable(transferArg);
     }
     if (s.find("create index")==0) {
         cout<<"this is create index\n";
@@ -194,6 +199,8 @@ void analyze(string s)
         
         // start to run API
         printTransferArguments(transferArg);
+        
+        APICreateIndex(transferArg);
     }
     if (s.find("drop index")==0) {
         cout<<"this is drop index\n";
@@ -203,6 +210,8 @@ void analyze(string s)
         
         // start to run API
         printTransferArguments(transferArg);
+        
+        APIDropIndex(transferArg);
     }
     if (s.find("select")==0) {
         cout<<"this is select\n";
@@ -231,10 +240,12 @@ void analyze(string s)
             Value new_element;
             new_element.Vname=strip(name_value[0]);
             new_element.op=op;
-            if (value1[0]=='"' || value1[0]=='\'' || value1[0]=='`') {
+            if (value1[0]=='"' || value1[0]=='\'' || value1[0]=='`')
+            {
                 vector<string> sSec_value1=split(value1,string(&value1[0],1));
                 new_element.Vstring=sSec_value1[0];
-            }   else
+            }
+            else
             {
                 new_element.Vfloat=stod(value1);
                 new_element.Vint=stoi(value1);
@@ -244,6 +255,8 @@ void analyze(string s)
         
         // start to run API
         printTransferArguments(transferArg);
+        
+        APISelect(transferArg);
     }
     if (s.find("insert into")==0) {
         cout<<"this is insert into\n";
@@ -312,6 +325,7 @@ void analyze(string s)
         
         // start to run API
         printTransferArguments(transferArg);
+        APIDelete(transferArg);
     }
     if (s.find("execfile")==0) {
         cout<<"this is execfile ";
@@ -321,10 +335,17 @@ void analyze(string s)
         cout<<fileName<<endl;
         ifstream readFile;
         readFile.open(fileName);
-        while (!readFile.eof()) {
-            analyze(sqlRead(readFile));
+        if (readFile)
+        {
+            while (!readFile.eof()) {
+                analyze(sqlRead(readFile));
+            }
+            cout<<"execfile finished"<<endl;
         }
-        cout<<"execfile finished"<<endl;
+        else
+        {
+            cout << "Failed opening file " << fileName << "!" << endl;
+        }
     }
     if (s.find("quit")==0) {
         cout<<"this is quit\n";

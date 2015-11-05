@@ -80,6 +80,10 @@ KeyValue::KeyValue(string init, int len): s(init), type(len)
 
 KeyValue::KeyValue(Value v)
 {
+    if (v.type == -2)
+    {
+        cout << "A Value object with unknown type." << endl;
+    }
 	switch (v.type)
 	{
 	case -1: i = v.Vint; break;

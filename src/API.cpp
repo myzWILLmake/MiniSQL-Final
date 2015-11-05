@@ -74,6 +74,12 @@ void APIInsertInto(TransferArguments transferArg)
         return;
     }
     
+    // update type of every arg
+    for (int i = 0; i != types.size(); i++)
+    {
+        transferArg.args[i].type = types[i];
+    }
+    
     memset(record->data, 0, sizeof(record->data));
     int current_pos=0;
     for (int i=0;i<types.size();i++)
@@ -109,4 +115,124 @@ void APIInsertInto(TransferArguments transferArg)
         }
     }
     //not finished
+}
+
+void APISelect(TransferArguments transferArg)
+{
+    // check whether the table exists
+    if (!cm->checkTable(transferArg.tableName))
+    {
+        cout << "The table '" << transferArg.tableName << "'does not exist." << endl;
+        return;
+    }
+    
+    // check whether every attribute exists in that table
+    for (vector<Value>::iterator iter = transferArg.args.begin(); iter != transferArg.args.end(); iter++) {
+        if (cm->checkAttribute(transferArg.tableName, iter->Vname) == -1)
+        {
+            cout << "The attribute '" << iter->Vname << "' does not exist in table '" << transferArg.tableName << "'." << endl;
+            return;
+        }
+    }
+    
+    // update type of every arg
+    for (vector<Value>::iterator iter = transferArg.args.begin(); iter != transferArg.args.end(); iter++) {
+        iter->type = cm->getAttributeType(transferArg.tableName, iter->Vname);
+    }
+    
+    // call RecordManager to select and print records
+    rm->selectRecord(transferArg.tableName, transferArg.args);
+}
+
+void APIDropTable(TransferArguments transferArg)
+{
+    // check whether the table exists
+    if (!cm->checkTable(transferArg.tableName))
+    {
+        cout << "The table '" << transferArg.tableName << "'does not exist." << endl;
+        return;
+    }
+    
+    // delete table information in catalog, record and index
+    rm->dropTable(transferArg.tableName);
+    im->dropIndexAll(transferArg.tableName);
+    cm->dropTableInfo(transferArg.tableName);
+}
+
+void APICreateIndex(TransferArguments transferArg)
+{
+    // check whether the table exists
+    if (!cm->checkTable(transferArg.tableName))
+    {
+        cout << "The table '" << transferArg.tableName << "'does not exist." << endl;
+        return;
+    }
+    
+    // check whether every attribute exists in that table
+    for (vector<Value>::iterator iter = transferArg.args.begin(); iter != transferArg.args.end(); iter++) {
+        if (cm->checkAttribute(transferArg.tableName, iter->Vname) == -1)
+        {
+            cout << "The attribute '" << iter->Vname << "' does not exist in table '" << transferArg.tableName << "'." << endl << endl;
+            return;
+        }
+    }
+    
+    // check whether the index is already existent
+    if (cm->checkIndex(transferArg.tableName, transferArg.args[0].Vname))
+    {
+        cout << "There is already index on '" << transferArg.args[0].Vname << "' in '" << transferArg.tableName << "'." << endl;
+        return;
+    }
+    
+    // update information in catalog
+    cm->addIndexInfo(transferArg.indexName, transferArg.tableName, transferArg.args[0].Vname);
+    
+    // create new index
+    im->addIndex(transferArg.tableName, transferArg.args[0].Vname);
+}
+
+void APIDropIndex(TransferArguments transferArg)
+{
+    // check whether the index exist
+    if (!cm->checkIndex(transferArg.indexName))
+    {
+        cout << "There is no index named '" << transferArg.indexName << "'." << endl;
+        return;
+    }
+    
+    string table;
+    string attr;
+    cm->getIndexInfo(transferArg.indexName, table, attr);
+    
+    // delete the index
+    im->dropIndex(table, attr);
+    
+    // delete information from catalog
+    cm->dropIndexInfo(transferArg.indexName);
+}
+
+void APIDelete(TransferArguments transferArg)
+{
+    // check whether the table exists
+    if (!cm->checkTable(transferArg.tableName))
+    {
+        cout << "The table '" << transferArg.tableName << "'does not exist." << endl;
+        return;
+    }
+    
+    // check whether every attribute exists in that table
+    for (vector<Value>::iterator iter = transferArg.args.begin(); iter != transferArg.args.end(); iter++) {
+        if (cm->checkAttribute(transferArg.tableName, iter->Vname) == -1)
+        {
+            cout << "The attribute '" << iter->Vname << "' does not exist in table '" << transferArg.tableName << "'." << endl;
+            return;
+        }
+    }
+    
+    // update type of every arg
+    for (vector<Value>::iterator iter = transferArg.args.begin(); iter != transferArg.args.end(); iter++) {
+        iter->type = cm->getAttributeType(transferArg.tableName, iter->Vname);
+    }
+    
+    rm->deleteRecord(transferArg.tableName, transferArg.args);
 }

@@ -27,6 +27,7 @@ public:
 	bool checkTable(string tableName); // check if this table exists, return true if it exists(vice versa)
 	bool checkIndex(string tableName, string attributeName); // check if this index exists, with table name and attribute name as input
 	bool checkIndex(string indexName); // check if this index exists, with index name as input
+    void getIndexInfo(string indexName, string &tableName, string &attributeName);// get table and attribute name of an index
 	string getIndexName(string tableName, string attributeName); // return index name corresponding to the table name and attribute name, invoked when it does exist
 	int checkAttribute(string tableName, string attributeName); // check if this table has this attribute
 	string getTableInfoPathName(string tableName); // return the path name of a table info file with table name as input

@@ -246,7 +246,7 @@ bool RecordManager::selectRecord(string tableName, vector<Value> &inputCondition
 				}
 			}
 		}
-		if(flag1==1){ //attribute in condition has no index, or condition is empty, then scan all records
+		if(flag1==0){ //attribute in condition has no index, or condition is empty, then scan all records
 			Block *block = bm->getFirstBlock(tableName);
 
 			while (block != NULL) {
