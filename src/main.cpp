@@ -14,10 +14,14 @@
 #include "Interpreter.hpp"
 #include "CommonHeader.hpp"
 #include "API.hpp"
+
+
 using namespace std;
 
 int main(int argc, const char * argv[]) {
-    // insert code here...
+#ifdef THS_DEBUG
+    system("rm student* catalogs*");
+#endif
     init();
     while (true) {
         analyze(sqlRead(cin));

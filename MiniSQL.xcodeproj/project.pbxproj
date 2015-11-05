@@ -275,7 +275,7 @@
 		AA0CE8D61BE6693A00C927C7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				MTL_ENABLE_DEBUG_INFO = "MY_DEBUG=1";
+				MTL_ENABLE_DEBUG_INFO = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;

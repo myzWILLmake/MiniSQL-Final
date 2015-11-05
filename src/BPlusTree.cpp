@@ -1328,6 +1328,7 @@ void BPlusTree::recur_destroy(int block_num)
 		{
 			recur_destroy(*iter);
 		}
+        recycle(block_num);
 	}
 	else
 	{

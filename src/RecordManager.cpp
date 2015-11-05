@@ -279,41 +279,41 @@ bool RecordManager::selectRecord(string tableName, vector<Value> &inputCondition
  */
 bool RecordManager::getKeysOffsets(string tableName, string attributeName, vector<pair<Value, int>>& tmp)
 {
-	int type, size, pos, offset;
-	char *sTmp = "";
-	pair<int, int>p = cm->getAttributePos(tableName, attributeName);
-
-	if (p.first < 0 || p.second < 0) {
-		cout << "Error" << endl;
-		return false;
-	}
-	pos = p.first;
-	size = p.second;
-	type = cm->getAttributeType(tableName, attributeName);
-	
-	Value value= Value(type);
-	tmp.clear();
-	Block *block =  bm->getFirstBlock(tableName);
-	while (block != NULL) {
-		for (int i = 0; i < EACH_BLOCK_RECORDS; i++) {
-			if (block->records[i].empty == false) {
-				offset = (block->blockNo*EACH_BLOCK_RECORDS) + i;
-				if (type == -1) {
-					memcpy(&value.Vint, block->records[i].data + pos, size);
-				}
-				else if (type == 0) {
-					memcpy(&value.Vfloat, block->records[i].data + pos, size);
-				}
-				else {
-					memcpy(sTmp, block->records[i].data + pos, size);
-					value.Vstring = sTmp;
-				}
-				tmp.push_back(pair<Value, int>(value, offset));
-			}
-		}
-		block = bm->getNextBlock(block, SELECT_MODE);
-	}
-	return true;
+    int type, size, pos, offset;
+    pair<int, int>p = cm->getAttributePos(tableName, attributeName);
+    
+    if (p.first < 0 || p.second < 0) {
+        cout << "Error" << endl;
+        return false;
+    }
+    pos = p.first;
+    size = p.second;
+    type = cm->getAttributeType(tableName, attributeName);
+    
+    Value value= Value(type);
+    tmp.clear();
+    Block *block =  bm->getFirstBlock(tableName);
+    while (block != NULL) {
+        for (int i = 0; i < EACH_BLOCK_RECORDS; i++) {
+            if (block->records[i].empty == false) {
+                offset = (block->blockNo*EACH_BLOCK_RECORDS) + i;
+                if (type == -1) {
+                    memcpy(&value.Vint, block->records[i].data + pos, size);
+                }
+                else if (type == 0) {
+                    memcpy(&value.Vfloat, block->records[i].data + pos, size);
+                }
+                else {
+                    char * sTmp = new char[size];
+                    memcpy(sTmp, block->records[i].data + pos, size);
+                    value.Vstring = sTmp;
+                }
+                tmp.push_back(pair<Value, int>(value, offset));
+            }
+        }
+        block = bm->getNextBlock(block, SELECT_MODE);
+    }
+    return true;
 }
 
 /**

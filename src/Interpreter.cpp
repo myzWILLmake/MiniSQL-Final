@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <vector>
 #include <set>
+
 using namespace std;
 
 
@@ -83,6 +84,7 @@ string sqlRead(istream &is)
 
 void printTransferArguments(TransferArguments transferArg)
 {
+#ifndef THS_DEBUG
     cout<<"tableName="<<transferArg.tableName<<endl;
     cout<<"indexName="<<transferArg.indexName<<endl;
     cout<<"primary key="<<transferArg.primary_key<<endl;
@@ -92,6 +94,7 @@ void printTransferArguments(TransferArguments transferArg)
         cout<<"int="<<it->Vint<<" float="<<it->Vfloat<<" Vstring="<<it->Vstring<<" op= "<<it->op<<endl;
         cout<<"unique="<<it->unique<<" primary="<<it->primary<<endl<<endl;
     }
+#endif
 }
 
 void changeIntoNewType(TransferArguments &transferArg)
@@ -167,10 +170,13 @@ void analyze(string s)
         // start to run API
         changeIntoNewType(transferArg);
         printTransferArguments(transferArg);
+#ifndef THS_DEBUG
         cout<<"interpreter print finished"<<endl;
-
+#endif
         APICreateTable(transferArg);
+#ifndef THS_DEBUG
         cout<<"executed successfully"<<endl;
+#endif
     }
     if (s.find("drop table")==0)
     {
@@ -184,7 +190,9 @@ void analyze(string s)
         APIDropTable(transferArg);
     }
     if (s.find("create index")==0) {
+#ifndef THS_DEBUG
         cout<<"this is create index\n";
+#endif
         s.erase(0,12);
         vector<string> sSec=split(s, "on");
         transferArg.indexName=strip(sSec[0]);
@@ -192,6 +200,7 @@ void analyze(string s)
         vector<string> sSec1=split(sSec[1], "(");
         transferArg.tableName=strip(sSec1[0]);
         sSec1[1].erase(sSec1[1].size()-2,2);
+        sSec1[1] = strip(sSec1[1]);
         
         Value new_element(1);
         new_element.Vname=sSec1[1];
@@ -203,7 +212,9 @@ void analyze(string s)
         APICreateIndex(transferArg);
     }
     if (s.find("drop index")==0) {
+#ifndef THS_DEBUG
         cout<<"this is drop index\n";
+#endif
         s.erase(0,10);
         s.erase(s.size()-1,1);
         transferArg.indexName=strip(s);
@@ -214,7 +225,9 @@ void analyze(string s)
         APIDropIndex(transferArg);
     }
     if (s.find("select")==0) {
+#ifndef THS_DEBUG
         cout<<"this is select\n";
+#endif
         //delete select * from
         s.erase(0,13);
         
@@ -259,7 +272,9 @@ void analyze(string s)
         APISelect(transferArg);
     }
     if (s.find("insert into")==0) {
+#ifndef THS_DEBUG
         cout<<"this is insert into\n";
+#endif
         s.erase(0,11);
         vector<string> sSec=split(s, "values");
         transferArg.tableName=strip(sSec[0]);
@@ -283,12 +298,19 @@ void analyze(string s)
         // start to run API
         changeIntoNewType(transferArg);
         printTransferArguments(transferArg);
+#ifndef THS_DEBUG
         cout<<"interpreter print finished"<<endl;
+#endif
         APIInsertInto(transferArg);
+        
+#ifndef THS_DEBUG
         cout<<"executed successfully"<<endl;
+#endif
     }
     if (s.find("delete from")==0) {
+#ifndef THS_DEBUG
         cout<<"this is delete from\n";
+#endif
         s.erase(0,11);
         vector<string> sSec=split(s, "where");
         transferArg.tableName=strip(sSec[0]);
@@ -328,7 +350,9 @@ void analyze(string s)
         APIDelete(transferArg);
     }
     if (s.find("execfile")==0) {
+#ifndef THS_DEBUG
         cout<<"this is execfile ";
+#endif
         s.erase(0,8);
         s.erase(s.size()-1,1);
         string fileName=strip(s);
@@ -348,7 +372,9 @@ void analyze(string s)
         }
     }
     if (s.find("quit")==0) {
+#ifndef THS_DEBUG
         cout<<"this is quit\n";
+#endif
         
         //start to run API
         APIQuit();

@@ -1,3 +1,5 @@
+
+
 create table student (
 		sno char(8),
 		sname char(16) unique,
@@ -7,6 +9,23 @@ create table student (
 );
 insert into student values ('12345678','wy',22,'M');
 insert into student values ('12345678','wy',22,'F');
+create index stunameidx on student ( sname );
+drop index stunameidx;
+quit;
+create index stunameidx on student ( sname );
+quit;
+select * from student where sage >= 20;
+quit;
+create table student (
+		sno char(8),
+		sname char(16) unique,
+		sage int,
+		sgender char (1),
+		primary key ( sno )
+);
+insert into student values ('12345678','wy',22,'M');
+insert into student values ('12345678','wy',22,'F');
+quit;
 create index stunameidx on student ( sname );
 drop index stunameidx;
 select * from student where sage >= 20;
