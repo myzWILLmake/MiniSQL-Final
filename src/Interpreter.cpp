@@ -109,10 +109,6 @@ void changeIntoNewType(TransferArguments &transferArg)
         if (it->type==3) {
             it->type=32;
         }
-        if (it->type == -1)
-        {
-            it->type = -2;// unknown type
-        }
 //        if (it->type==-1) then its still -1
     }
 }
