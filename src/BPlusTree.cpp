@@ -1105,7 +1105,7 @@ void BPlusTree::recur_search(int block_num, vector<int> &indices, KeyValue lower
 			if (lowerIn ? lower <= cur_node->keys[i] : lower < cur_node->keys[i])
 				break;
 		}
-		while (upperIn ? cur_node->keys[i] <= upper : cur_node->keys[i] < upper)
+		while (i < cur_node->key_num && (upperIn ? cur_node->keys[i] <= upper : cur_node->keys[i] < upper))
 		{
 			indices.push_back(cur_node->offsets[i]);
             i++;

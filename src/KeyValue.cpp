@@ -88,7 +88,7 @@ KeyValue::KeyValue(Value v)
 	{
 	case -1: i = v.Vint; break;
 	case 0: f = v.Vfloat; break;
-	default: s = v.Vstring; break;
+    default: s = v.Vstring; s.resize(v.type); break;
 	}
 	type = v.type;
 }
