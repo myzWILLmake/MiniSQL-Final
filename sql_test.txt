@@ -1,4 +1,6 @@
-
+create index stunameidx on student ( sname );
+drop index stunameidx;
+quit;
 
 create table student (
 		sno char(8),

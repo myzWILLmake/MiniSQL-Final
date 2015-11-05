@@ -40,3 +40,4 @@ create table cugadzhlvbojfcesutn(
 	primary key (shekqnfckvfizrxt)
 );
 quit;
+

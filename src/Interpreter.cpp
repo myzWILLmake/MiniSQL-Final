@@ -84,7 +84,6 @@ string sqlRead(istream &is)
 
 void printTransferArguments(TransferArguments transferArg)
 {
-#ifndef THS_DEBUG
     cout<<"tableName="<<transferArg.tableName<<endl;
     cout<<"indexName="<<transferArg.indexName<<endl;
     cout<<"primary key="<<transferArg.primary_key<<endl;
@@ -94,26 +93,25 @@ void printTransferArguments(TransferArguments transferArg)
         cout<<"int="<<it->Vint<<" float="<<it->Vfloat<<" Vstring="<<it->Vstring<<" op= "<<it->op<<endl;
         cout<<"unique="<<it->unique<<" primary="<<it->primary<<endl<<endl;
     }
-#endif
 }
 
 void changeIntoNewType(TransferArguments &transferArg)
 {
     for (vector<Value>::iterator it=transferArg.args.begin(); it!=transferArg.args.end(); it++) {
-        if (it->type==1) {
-            it->type=-1;
+        switch (it->type) {
+            case 1:
+                it->type = -1;
+                break;
+            case 2:
+                it->type = 0;
+                break;
+            case 3:
+                it->type = 32;
+                break;
+            case -1:
+                it->type = -2;// unknown type
+                break;
         }
-        if (it->type==2) {
-            it->type=0;
-        }
-        if (it->type==3) {
-            it->type=32;
-        }
-        if (it->type == -1)
-        {
-            it->type = -2;// unknown type
-        }
-//        if (it->type==-1) then its still -1
     }
 }
 
@@ -170,13 +168,9 @@ void analyze(string s)
         // start to run API
         changeIntoNewType(transferArg);
         printTransferArguments(transferArg);
-#ifndef THS_DEBUG
         cout<<"interpreter print finished"<<endl;
-#endif
         APICreateTable(transferArg);
-#ifndef THS_DEBUG
         cout<<"executed successfully"<<endl;
-#endif
     }
     if (s.find("drop table")==0)
     {
@@ -190,9 +184,8 @@ void analyze(string s)
         APIDropTable(transferArg);
     }
     if (s.find("create index")==0) {
-#ifndef THS_DEBUG
         cout<<"this is create index\n";
-#endif
+        
         s.erase(0,12);
         vector<string> sSec=split(s, "on");
         transferArg.indexName=strip(sSec[0]);
