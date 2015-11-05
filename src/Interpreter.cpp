@@ -77,7 +77,7 @@ string sqlRead(istream &is)
         string s;
         getline(is, s);
         inputLine+=s;
-        if (inputLine[inputLine.size()-1]==';')   break;
+        if (inputLine[inputLine.size()-1]==';' || s=="")   break;
     }
     return inputLine;
 }
@@ -357,5 +357,5 @@ void analyze(string s)
         //start to run API
         APIQuit();
     }
-    cout<<"this is not a sql statement\n";
+//    cout<<"this is not a sql statement\n";
 }
