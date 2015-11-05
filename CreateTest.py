@@ -70,7 +70,10 @@ for i in range(MAX_NUMBER_OF_SQLS):
     for j in range(random.randint(1, 10)):
         sql_insertInto = "insert into " + tableName + ' values ('
         for pos in range(len(tableTypeList)):
-            sql_insertInto += "'" + generateAData(tableTypeList[pos]) + "'"
+            if tableTypeList[pos].find('char') != -1:
+                sql_insertInto += "'" + generateAData(tableTypeList[pos]) + "'"
+            else:
+                sql_insertInto += generateAData(tableTypeList[pos])
             if pos < len(tableTypeList)-1:
                 sql_insertInto += ', '
         sql_insertInto += ');\n'

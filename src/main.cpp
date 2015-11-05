@@ -20,6 +20,7 @@ using namespace std;
 
 int main(int argc, const char * argv[]) {
     init();
+    cout<<"Welcome to Database XXXXXX. Author: Huangshi Tian, SHIBI HE, Yunzhe Ma, Wolong Yuan."<<endl;
     while (true) {
         analyze(sqlRead(cin));
     }

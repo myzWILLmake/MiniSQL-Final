@@ -5,3 +5,5 @@ create table kak(
 	oyoiuolshiuopfsuzipq float ,
 	primary key (uqgvurquwnkculihxzdv)
 );
+insert into kak values('abcd',12.2,'abc',12.3);
+select * from kak where pjz='abc';
