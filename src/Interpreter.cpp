@@ -98,21 +98,13 @@ void printTransferArguments(TransferArguments transferArg)
 void changeIntoNewType(TransferArguments &transferArg)
 {
     for (vector<Value>::iterator it=transferArg.args.begin(); it!=transferArg.args.end(); it++) {
-        switch (it->type) {
-            case 1:
-                it->type = -1;
-                break;
-            case 2:
-                it->type = 0;
-                break;
-            case 3:
-                it->type = 32;
-                break;
-            case -1:
-                it->type = -2;// unknown type
-                break;
-        }
-//        if (it->type==-1) then its still -1
+        if (it->type==1) {
+            it->type=-1;
+        } else
+            if (it->type==2) {
+                it->type=0;
+            }
+// if (it->type==-1) then its still -1
     }
 }
 
@@ -156,7 +148,14 @@ void analyze(string s)
                     type=2;
                 }   else
                     if (sSec[1].find("char")==0) {
-                        type=3;
+                        // char(120)
+                        //0123456789
+                        size_t pos_first = sSec[1].find("(");
+                        size_t pos_second = sSec[1].find(")");
+                        string snumber = sSec[1].substr(pos_first+1, pos_second-pos_first-1);
+                        int number = stoi(snumber);
+//                        cout<<number<<' '<<sSec[1]<<endl;
+                        type=number;
                     }
             Value new_value(type);
             new_value.Vname=name;

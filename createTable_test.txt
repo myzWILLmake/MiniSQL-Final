@@ -1,153 +1,153 @@
 create table student(
-	fyoynxmpvcwjow char(100) ,
-	jnrmvrpw int unique,
-	hfwvnvftitgvcihauskm int ,
-	tmjmgkuyuirzozbntdyp char(100) ,
-	plyqpgsqnfcslnjd int ,
-	yegej int ,
-	primary key (fyoynxmpvcwjow)
+	x float ,
+	lwjbd char(30) ,
+	primary key (x)
 );
-create table pme(
-	mvagumvpoiesd int ,
-	ahhrxxwrhkvtmsfiz float unique,
-	jvdnbqlmt char(100) ,
-	ncfpzkhalmoublnjbpml char(100) ,
-	qizvczjha int ,
-	gjartzwetbrgxdnhu float unique,
-	nuyeyilb float ,
-	primary key (mvagumvpoiesd)
+create table htjcguwepbnhere(
+	spwqcxktjgowpbhkmhwn int ,
+	irucikgcdytzcxdyh float unique,
+	mhaxjgzcxcczhgn float ,
+	qjztxvlzuuoepcnlzbq int ,
+	tgivlqwfxzfshhkagtxy int ,
+	primary key (spwqcxktjgowpbhkmhwn)
 );
-create table qnndvjsvp(
-	f float ,
-	bxsfkiikubg char(100) unique,
-	dns char(100) unique,
-	ryuutds float ,
-	znbcinybsanrfkbplecu float unique,
-	qekgynihmh float ,
-	lmbecpedxjaimqaxjr int ,
-	yoqxzw int ,
-	svcw float ,
-	primary key (f)
+create table yqebltetkprcxcv(
+	taosmlntldxwtbizvzg char(22) ,
+	primary key (taosmlntldxwtbizvzg)
 );
-create table xmycib(
-	pqmnkhmwjmqgosuhty char(100) ,
-	uorlpqpfyswpkktkcumz int ,
-	yljdk char(100) ,
-	nro float ,
-	jwat char(100) unique,
-	pk int unique,
-	rzgvh float ,
-	primary key (pqmnkhmwjmqgosuhty)
+create table hlptvzqlibxr(
+	vdshzf char(30) ,
+	primary key (vdshzf)
 );
-create table vrcgfdifhbwvst(
-	uqvqkitygnovwzftgc char(100) ,
-	uwymrvrxerllj int ,
-	primary key (uqvqkitygnovwzftgc)
+create table uidtfq(
+	sozgojtse char(22) ,
+	nahrdvotweumg char(22) ,
+	oilvyqekrwqinth int ,
+	xbtdcwgjgyrpeduwl float ,
+	kuqknnlktg int unique,
+	ducrfudyhxgkisfeyn int ,
+	xsvvxryvrebbvqc float ,
+	w char(22) ,
+	primary key (sozgojtse)
 );
-create table uvugxooddonilx(
-	hhds int ,
-	primary key (hhds)
+create table jtcdryvkaggfsigkluwr(
+	srxpccbmalzhjmxxjeac int ,
+	rcdczz char(30) ,
+	gpeckbfytoefh float ,
+	lvqzhwsdqngxnufq char(22) ,
+	rnvtohmbckfsaxbeq int ,
+	jgendvq char(22) ,
+	kkf char(22) unique,
+	vyyjxvuehyv char(30) unique,
+	hekqahr char(30) unique,
+	qufryyzlhljejugvoy char(30) unique,
+	primary key (srxpccbmalzhjmxxjeac)
 );
-create table lewbjjdcrkfc(
-	dmhikd char(100) ,
-	euwxyevvudkjmrqtw char(100) unique,
-	j char(100) ,
-	ll char(100) ,
-	praoiybygamzdh float ,
-	jrnxd float unique,
-	primary key (dmhikd)
+create table aphtsgguxmlghxwtqpa(
+	kbrmysqotk char(30) ,
+	aewhftni char(22) unique,
+	kc char(30) ,
+	ejcfzquhck int ,
+	mcb float ,
+	jboygqtjpncjxx char(22) ,
+	neqozsvagbspe char(22) ,
+	jjjufuwm char(30) ,
+	primary key (kbrmysqotk)
 );
-create table hiwdybk(
-	bhyknrbmzioh float ,
-	ukkhqr int ,
-	primary key (bhyknrbmzioh)
+create table gekfg(
+	bqcyamgjo char(30) ,
+	ves char(22) ,
+	qocimsudowbzj float ,
+	og float ,
+	primary key (bqcyamgjo)
 );
-create table rtlevpcptnghufya(
-	yltfurvamfbe int ,
-	fcazbr char(100) unique,
-	tugfncytyhkurnluply float ,
-	xlezocfsiqqxcdvn float ,
-	primary key (yltfurvamfbe)
+create table hjnoriomnougqf(
+	b int ,
+	lblwwwxpfdku char(30) ,
+	dlxfmfkz char(22) ,
+	primary key (b)
 );
-create table qlqfyhgl(
-	ctqtpdqwdh int ,
-	aazwdovwfwgmqvf int ,
-	srreipxqicketepbmbsu char(100) ,
-	wcelstkjmndwy int ,
-	lbulfrmgtj int ,
-	okqxtfvxgkspskhirdz char(100) ,
-	omptwuqvtwdfsiprf int ,
-	lawximpwkql int ,
-	jllwlecji char(100) ,
-	primary key (ctqtpdqwdh)
+create table xsgsqpiwew(
+	ixghmfkxtzrobnkow float ,
+	ujkmx int ,
+	sxihwmllnfaibtjye char(22) ,
+	ytrewdysamwhteo char(22) ,
+	xtioaqgcpdjnksmbivp char(30) ,
+	yzmpruhgylhn char(30) ,
+	ptwzmwunaxhigjfaic float ,
+	primary key (ixghmfkxtzrobnkow)
 );
-create table jwhk(
-	hlkleooceqnjzijn float ,
-	zcmvlajgyfjyryb char(100) ,
-	esriwmcvasvuokxxeay float ,
-	primary key (hlkleooceqnjzijn)
+create table ebcrvrogy(
+	btanusrahfgvwt char(22) ,
+	xdslmcauhflxrafhr char(30) ,
+	pgakst float ,
+	primary key (btanusrahfgvwt)
 );
-create table ymsmgxk(
-	jecbfje char(100) ,
-	kwzfxfemesijg float ,
-	zlmrevgin char(100) ,
-	qxszy char(100) ,
-	primary key (jecbfje)
+create table mchgmfd(
+	kmxrltx float ,
+	wkel char(22) ,
+	zjmlwboegfbyi char(22) ,
+	primary key (kmxrltx)
 );
-create table rcx(
-	fsllx float ,
-	primary key (fsllx)
+create table mghwkycjmjwcqacngl(
+	jjinutnmycdhxttvrj char(22) ,
+	nhopkeibbzzbtvuhjmxw char(30) ,
+	kgjpkcquuuteljkadxw char(30) ,
+	yqbmeqitmfvljlsgwpt float ,
+	flou char(30) ,
+	fzly char(22) ,
+	primary key (jjinutnmycdhxttvrj)
 );
-create table zaklpv(
-	quztxwsi int ,
-	primary key (quztxwsi)
+create table jq(
+	gxpmg int ,
+	primary key (gxpmg)
 );
-create table ky(
-	szcdhp float ,
-	wqyyqguggvzhelazfpw int ,
-	bqokmgnxkltnzimurja int ,
-	cfiuxszpovbx int ,
-	twvilnfvcsd float ,
-	yaeregr int ,
-	djhgsdcrq float ,
-	suhnhrofxd float unique,
-	qwtlmbfrnsm float ,
-	uknyiemdxrgg float unique,
-	primary key (szcdhp)
+create table fyiwafmbdiu(
+	u int ,
+	zedkpwnbreuiovtbgw int ,
+	bslzfjtcegpkqhamf int ,
+	w char(30) ,
+	xdmshpicvneytc float ,
+	deqxwruxggtyjlnck int ,
+	apagzjmvqf int ,
+	blosmukstuuua int ,
+	nppduukosnngnkoj char(22) unique,
+	c char(30) ,
+	primary key (u)
 );
-create table mbgsppebgpqsmnru(
-	aveyx char(100) ,
-	pkdeudqvpjh int unique,
-	omcxethgilgherd float unique,
-	olauifkhrrotigqb char(100) ,
-	dz char(100) ,
-	ewpjdy float ,
-	ivtfmd int ,
-	qymw float unique,
-	primary key (aveyx)
+create table qfhtkyvbbkhzb(
+	ifvibxk int ,
+	uesywudvthjgpfo char(22) unique,
+	primary key (ifvibxk)
 );
-create table ij(
-	iodigigimoaichkx float ,
-	xmovgjwnslbinbit float unique,
-	vqwwatdykdraswdw char(100) unique,
-	primary key (iodigigimoaichkx)
+create table emawyiirysoziinxquc(
+	dtxawpxcp int ,
+	rbszskngbeeqnllpex float ,
+	primary key (dtxawpxcp)
 );
-create table zui(
-	lepzwncnekmnhrlpjh int ,
-	o char(100) ,
-	primary key (lepzwncnekmnhrlpjh)
+create table zxxzwoihc(
+	cth float ,
+	prhqkda float ,
+	eaichhaxbx char(22) ,
+	kpmyaayjgydplsrypen int ,
+	ksvxlbrlzgpb float ,
+	primary key (cth)
 );
-create table frachohlpejqnmy(
-	tzq int ,
-	bxvjccjjkv int ,
-	primary key (tzq)
+create table bhfpriesnpbvkkdqij(
+	opcpktiswhlovrn char(30) ,
+	qvidwuf char(22) ,
+	primary key (opcpktiswhlovrn)
 );
-create table dwsxpp(
-	hgqlfcxlfuazfuvz int ,
-	zowgonosqww int ,
-	b char(100) ,
-	aeyudcrvejjpx char(100) ,
-	qoxj int ,
-	u char(100) ,
-	primary key (hgqlfcxlfuazfuvz)
+create table eethgn(
+	zuaafclivt char(22) ,
+	wkqkmntfolawlol char(22) ,
+	ozertibvxlxevqesdish char(30) ,
+	idjbaiisf int ,
+	wurtxhsugz float ,
+	ne char(30) ,
+	cidbduxuabdq char(22) unique,
+	vclrhzcijjgdd float unique,
+	eacdticksndyjzxropg int ,
+	x char(30) ,
+	primary key (zuaafclivt)
 );

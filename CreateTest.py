@@ -7,7 +7,7 @@ MAX_NUMBER_OF_ATTRIBUTES = 10
 
 letters = "abcdefghijklmnopqrstuvwxyz"
 numbers = "1234567890"
-types = ["int", "char(100)", "float"]
+types = ["int", "char(22)", "float", "char(30)"]
 
 file1 = open("createTable_test.txt", mode="w+")
 file2 = open('insertInto_test.txt', mode="w+")
@@ -67,7 +67,7 @@ for i in range(MAX_NUMBER_OF_SQLS):
         tableTypeList.append(atype)
         sql_create = sql_create + '\t' + attributeName + ' ' + atype + " " + s_unique + ',\n'
 
-    for j in range(random.randint(1,10)):
+    for j in range(random.randint(1, 10)):
         sql_insertInto = "insert into " + tableName + ' values ('
         for pos in range(len(tableTypeList)):
             sql_insertInto += "'" + generateAData(tableTypeList[pos]) + "'"
