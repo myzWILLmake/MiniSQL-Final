@@ -1,0 +1,7 @@
+create table kak(
+	uqgvurquwnkculihxzdv char(100) ,
+	ssjbavtywdzaarfkn float ,
+	pjz char(100) ,
+	oyoiuolshiuopfsuzipq float ,
+	primary key (uqgvurquwnkculihxzdv)
+);
