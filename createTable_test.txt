@@ -1,4 +1,5 @@
 create table student(
+<<<<<<< HEAD
 	cgpjk float,
 	bmlttnvumxlvqnkibk int,
 	myoc float,
@@ -41,3 +42,163 @@ create table cugadzhlvbojfcesutn(
 );
 quit;
 
+=======
+	trxgikhzoigwjwlxoxyk int,
+	vkzmtirlgpenqbubjn int,
+	eapdehk int,
+	zgobffriemqwsxj int,
+	azvbgftaumpstddds char(100),
+	tpuofnktvhbvew int,
+	primary key (eapdehk)
+);
+create table l(
+	yu float,
+	primary key (yu)
+);
+create table ppaitohshuujafspqeb(
+	ejcayhrfsxrqijmwcly int,
+	primary key (ejcayhrfsxrqijmwcly)
+);
+create table dsfkiphknnwtrvds(
+	cjaeqodgzeatezic float,
+	sdzhqsgzceexakhsbcn char(100),
+	xzfjxppwkech char(100),
+	buqgnupfzqiwpwpps float,
+	gnrbkcfszoz float,
+	wjfbmpbnratavnjeke int,
+	powxot float,
+	primary key (wjfbmpbnratavnjeke)
+);
+create table brwphgbaxfy(
+	poauerlwaaqwppnytdk int,
+	primary key (poauerlwaaqwppnytdk)
+);
+create table xnmfjeukbicvsih(
+	oohadiziwsp int,
+	dujlwsjnfair float,
+	aaqgqxjyxqla char(100),
+	fvppeu float,
+	primary key (oohadiziwsp)
+);
+create table tsowxxlyqucssogdxd(
+	oqasoorwfm float,
+	cq char(100),
+	jacpjofymvfofcavoz int,
+	hgajaigbagb char(100),
+	lbgzttzdasiovc float,
+	czcbjwpvmegsqcfgrgn char(100),
+	vzdhuxyrfwzrozndj float,
+	primary key (hgajaigbagb)
+);
+create table j(
+	mebxsvpwcomw int,
+	rxdqbn int,
+	ljqirbtzgunawxtwp int,
+	primary key (rxdqbn)
+);
+create table ojmnjmawsfgerolr(
+	aqjmlhfdqsjw int,
+	dem float,
+	primary key (dem)
+);
+create table dfebcmwfwqtzqfikfy(
+	kxskuaqsszx int,
+	qhtoujioze int,
+	xfbvqpmcirwhddnnqqsf char(100),
+	qlcvfuxe char(100),
+	primary key (kxskuaqsszx)
+);
+create table egaorxql(
+	gnjice char(100),
+	hacyjt float,
+	ztlm float,
+	kjegnvojeznnukihzh char(100),
+	yjflgsaukewds float,
+	ovkrltcquipybqzemaid char(100),
+	primary key (ztlm)
+);
+create table tshmyrdflmyebcejnv(
+	assgofczco int,
+	primary key (assgofczco)
+);
+create table tbncbqtkgscstrgwfoto(
+	cfbfyedsaypbcztgup int,
+	offpvn char(100),
+	bpeinjry float,
+	fqsodunsiqy char(100),
+	primary key (bpeinjry)
+);
+create table hgmxtpyazgfqzbfjed(
+	aewifncrckf int,
+	epyt int,
+	ffjslaxzgbswuo char(100),
+	nzbvrblrjjprljwj int,
+	dcuibvlzoccmbe float,
+	wrtkfuecvfgkqkruqlj char(100),
+	tjsxqbqzbuf float,
+	dxdgslqpjxmvck char(100),
+	sbhbzpksua float,
+	primary key (nzbvrblrjjprljwj)
+);
+create table e(
+	cltuhhickpjkqcntqehi char(100),
+	lqrboii char(100),
+	otphviviznxxryi float,
+	eytqtaaginoezvarp int,
+	hoitjfilq int,
+	lfparpd float,
+	hihzhkxquzrxyk float,
+	sob int,
+	w float,
+	rhds float,
+	primary key (w)
+);
+create table kptbaomar(
+	eniazojpxpu int,
+	wuwbvxuckesejrm int,
+	primary key (eniazojpxpu)
+);
+create table qydzulpqzlvasoqsv(
+	nxdiucddmjcujumv float,
+	m char(100),
+	zblk int,
+	k char(100),
+	yblngcyhwlwoatt int,
+	nspju float,
+	jdmjemptgcovctzhe char(100),
+	vov char(100),
+	x float,
+	ztdpvbcfeas float,
+	primary key (x)
+);
+create table lsdnephkoam(
+	mnaip float,
+	sxxpkrk int,
+	wkeseegllfgxcumtei float,
+	lwinanfyzgdavm int,
+	h int,
+	kbbijhv char(100),
+	sx float,
+	vmmyy char(100),
+	primary key (sx)
+);
+create table uypsgnnatdw(
+	lwwr float,
+	gl char(100),
+	afhds char(100),
+	uswziwsxwbiklvvtn int,
+	vl float,
+	primary key (afhds)
+);
+create table dygij(
+	semfzywipxxuut char(100),
+	yslcoqgyjwzzbjirlw int,
+	haklqylrd char(100),
+	hqoxwkvciljfvlkc float,
+	gdljel char(100),
+	niygjrlpjmztxmmsc int,
+	bch char(100),
+	rfbwiupurcgkkmvtom int,
+	primary key (semfzywipxxuut)
+);
+>>>>>>> remotes/origin/master

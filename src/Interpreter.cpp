@@ -112,7 +112,7 @@ void changeIntoNewType(TransferArguments &transferArg)
                 it->type = -2;// unknown type
                 break;
         }
-    }
+//        if (it->type==-1) then its still -1
 }
 
 void analyze(string s)
