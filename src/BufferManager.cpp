@@ -13,11 +13,19 @@
 /* -------- private functions -------- */
 
 std::string BufferManager::formatNotoString(int numNo) {
-    char numChar0 = '0' + numNo / 10;
-    char numChar1 = '0' + numNo % 10;
+    int numTmp = numNo;
+    char numChar0 = '0' + numTmp / 1000;
+    numTmp %= 1000;
+    char numChar1 = '0' + numTmp / 100;
+    numTmp %= 100;
+    char numChar2 = '0' + numTmp / 10;
+    numTmp %= 10;
+    char numChar3 = '0' + numTmp;
     std::string tmpString = "";
     tmpString += numChar0;
     tmpString += numChar1;
+    tmpString += numChar2;
+    tmpString += numChar3;
     return tmpString;
 }
 
