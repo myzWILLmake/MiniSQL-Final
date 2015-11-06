@@ -17,7 +17,7 @@
 
 #define RECORD_BLOCK_NUM    1024
 #define INDEX_BLOCK_NUM     1024
-#define MAX_BLOCK_FILE_NUM  100
+#define MAX_BLOCK_FILE_NUM  10000
 
 class BufferManager {
 private:
