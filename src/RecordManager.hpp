@@ -28,8 +28,8 @@ public:
     void deleteIndex(const Record & record, string tableName);//delete all indices of the record
 	bool selectRecord(string tableName, vector<Value> &inputCondition); // query records with conditions
 	bool getKeysOffsets(string tableName, string attributeName, vector<pair<Value, int>> &tmp); //get all values of an attribute in a table and offsets of those records
-	void printRecord(const Record &record, vector<int> &attributeTypes); // print a record in a line
-	void printHead(vector<string> &attributeNames); // print the table head
+	void printRecord(const Record &record, vector<int> &attributeTypes, vector<int> &printWidth); // print a record in a line
+	void printHead(vector<string> &attributeNames, vector<int> &attributeTypes, vector<int> &printWidth); // print the table head
 	bool optimize(string tableName, vector<Value> &inputCondition, Condition &condition); // optimaze the condition, invoked in the RM
 	bool match(const Record &record, Condition &condition, string tableName); // check if a record matchs the condition
 	bool compare(Value &v1, Value &v2, string op); // compare two values

@@ -1,5 +1,7 @@
 #include "API.hpp"
 #include "RecordManager.hpp"
+#include <iomanip>
+#include <algorithm>
 
 RecordManager::RecordManager()
 {
@@ -172,6 +174,7 @@ bool RecordManager::selectRecord(string tableName, vector<Value> &inputCondition
 	string attributeName;
 	vector<int> attributeTypes = cm->getAttributeTypes(tableName);
 	vector<string> attributeNames = cm->getAttributeNames(tableName);
+	vector<int> printWidth;
 	int flag1=0, flag2=0, flag3=0;
 	// flag1=0:need scan all records 
 	// flag2=1:find with index 
@@ -230,9 +233,9 @@ bool RecordManager::selectRecord(string tableName, vector<Value> &inputCondition
 							if(match(block->records[recordIndex], condition, tableName)){
 								if (flag3 == 0) {
 									flag3 = 1;
-									printHead(attributeNames);
+									printHead(attributeNames, attributeTypes, printWidth);
 								}
-								printRecord(block->records[recordIndex], attributeTypes);
+								printRecord(block->records[recordIndex], attributeTypes, printWidth);
 							}
 						}
 						if (flag3 == 0){
@@ -257,9 +260,9 @@ bool RecordManager::selectRecord(string tableName, vector<Value> &inputCondition
 						if (condition.empty() || !condition.empty() && match(block->records[i], condition, tableName)) {
 							if (flag3 == 0) {
 								flag3 = 1;
-								printHead(attributeNames);
+								printHead(attributeNames, attributeTypes, printWidth);
 							}
-							printRecord(block->records[i], attributeTypes);
+							printRecord(block->records[i], attributeTypes, printWidth);
 						}
 					}
 				}
@@ -322,20 +325,20 @@ bool RecordManager::getKeysOffsets(string tableName, string attributeName, vecto
 /**
  * print records of select results
  */
-void RecordManager::printRecord(const Record & record, vector<int> &attributeTypes)
+void RecordManager::printRecord(const Record & record, vector<int> &attributeTypes, vector<int> &printWidth)
 {
 	int type, size;
-
+	cout << "\t";
 	for (int i = 0, pos=0; i < attributeTypes.size(); i++, pos+=size) {
 		type = attributeTypes[i];
 		size = type < 1 ? 4 : type;
 	
 		if (type == -1)
-			cout << "\t" << *(int *)(record.data + pos);
+			cout << setiosflags(ios::left)<< setw(printWidth[i]) << *(int *)(record.data + pos);
 		else if (type == 0)
-			cout << "\t" << *(float *)(record.data + pos);
+			cout << setiosflags(ios::left) << setw(printWidth[i]) << *(float *)(record.data + pos);
 		else
-			cout << "\t" << (char *)(record.data+pos);
+			cout << setiosflags(ios::left) << setw(printWidth[i]) << (char *)(record.data+pos);
 	}
 	cout << endl;
 }
@@ -371,10 +374,15 @@ void RecordManager::deleteIndex(const Record & record, string tableName)
 /**
  * print table head of select results
  */
-void RecordManager::printHead(vector<string> &attributeNames)
+void RecordManager::printHead(vector<string> &attributeNames, vector<int> &attributeTypes, vector<int> &printWidth)
 {
+	int width;
+	cout << "\t";
+	printWidth.clear();
 	for (int i = 0; i < attributeNames.size(); i++) {
-		cout << "\t" << attributeNames[i];
+		width = max(attributeTypes[i] < 1 ? 8 : attributeTypes[i]+2, (int)attributeNames[i].length()+2);
+		printWidth.push_back(width);
+		cout << setiosflags(ios::left) << setw(width) << attributeNames[i];
 	}
 	cout << endl;
 }
