@@ -98,7 +98,7 @@ void APIInsertInto(TransferArguments transferArg)
         {
             memcpy(record->data+current_pos, transferArg.args[i].Vstring.c_str(),
                    strlen(transferArg.args[i].Vstring.c_str()));
-            current_pos+=32;
+            current_pos+=types[i]+1;
         }
     }
     if (displayRecordContents) {
