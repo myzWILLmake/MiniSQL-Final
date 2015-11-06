@@ -204,7 +204,11 @@ bool BufferManager::dropTable(std::string tableName) {
         if (res)
             break;
     }
+#if defined _MSC_VER
+    _rmdir(path.c_str());
+#elif defined __GNUC__
     rmdir(path.c_str());
+#endif
     return true;
 }
 
