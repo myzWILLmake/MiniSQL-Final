@@ -6,6 +6,11 @@
  */
 CatalogManager::CatalogManager()
 {
+#if defined _MSC_VER
+	_mkdir("catalog");
+#elif defined __GNUC__
+	mkdir("catalog", 0777);
+#endif
 	createTableCatalog();
 	createIndexCatalog();
 }
@@ -385,7 +390,7 @@ int CatalogManager::checkAttribute(string tableName, string attributeName)
  */
 string CatalogManager::getTableInfoPathName(string tableName)
 {
-	return "catalogs_"+tableName;
+	return "catalog/"+tableName;
 }
 
 /**
