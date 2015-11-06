@@ -21,7 +21,7 @@ public:
     int Vint;
     float Vfloat;
     string Vstring;
-    int type;   // 1=int 2=float 3=string -1=unknown
+    int type;   // -1=int 0=float >0 string -2=unknown
     bool unique;
     bool primary;
     string op; //=	<>	<	>	<=	>=

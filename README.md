@@ -1,10 +1,11 @@
 # MiniSQL-IndexManager
 
 ###ISSUE
-API.cpp has two variables:
-bool displayComments
-bool displayRecordContents
-we can use them to control if the CMD displays comments.
+API.cpp has three variables:
+
+bool displayComments    bool displayRecordContents  bool enableCheckUnique
+
+We can use them to control if the CMD displays comments and if insert into checks unique and primary.
 
 1. `CommonHeader.hpp`中`Value`类的`type`定义修改为：
 

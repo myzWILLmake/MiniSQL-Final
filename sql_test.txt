@@ -1,4 +1,3 @@
-
 create table student (
 		sno char(8),
 		sname char(16) unique,
@@ -6,13 +5,12 @@ create table student (
 		sgender char (1),
 		primary key ( sno )
 );
-insert into student values ('12345678','wy',22,'M');
-insert into student values ('12345678','wy',22,'F');
-select * from student where sno <= '12345678';
+insert into student values ('12345678','xyz',22,'M');
+insert into student values ('12345679','abc',22,'F');
+select * from student where sno = '12345679';
+select * from student where sgender = 'M';
 create index stunameidx on student ( sname );
 drop index stunameidx;
-quit;
-
 create index stunameidx on student ( sname );
 drop index stunameidx;
 quit;

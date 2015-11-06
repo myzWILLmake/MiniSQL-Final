@@ -97,19 +97,23 @@ void printTransferArguments(TransferArguments transferArg)
 
 void changeIntoNewType(TransferArguments &transferArg)
 {
-    for (vector<Value>::iterator it=transferArg.args.begin(); it!=transferArg.args.end(); it++) {
-        if (it->type==1) {
-            it->type=-1;
-        } else
-            if (it->type==2) {
-                it->type=0;
-            }
-// if (it->type==-1) then its still -1
-    }
+    return;
+//    for (vector<Value>::iterator it=transferArg.args.begin(); it!=transferArg.args.end(); it++) {
+//        if (it->type==1) {
+//            it->type=-1;
+//        } else
+//            if (it->type==2) {
+//                it->type=0;
+//            }
+//// if (it->type==-1) then its still -1
+//    }
 }
 
 void analyze(string s)
 {
+    if (s=="") {
+        return;
+    }
     TransferArguments transferArg;
     if (s.find("create table")==0)
     {
@@ -139,20 +143,32 @@ void analyze(string s)
             }
             
             vector<string> sSec=split(sLine, " ");
+            
             string name=strip(sSec[0]);
-            int type=-1;
+            int type=-2; //unknown
             if (sSec[1].find("int")==0) {
-                type=1;
+                type=-1;
             }   else
                 if (sSec[1].find("float")==0) {
-                    type=2;
+                    type=0;
                 }   else
                     if (sSec[1].find("char")==0) {
                         // char(120)
                         //0123456789
-                        size_t pos_first = sSec[1].find("(");
-                        size_t pos_second = sSec[1].find(")");
-                        string snumber = sSec[1].substr(pos_first+1, pos_second-pos_first-1);
+                        
+                        string snumber = "";
+                        // char (12)
+                        if (sSec[1].find("(")==string::npos) {
+                            size_t pos_first = sSec[2].find("(");
+                            size_t pos_second = sSec[2].find(")");
+                            snumber = sSec[2].substr(pos_first+1, pos_second-pos_first-1);
+                        } else
+                        {
+                            size_t pos_first = sSec[1].find("(");
+                            size_t pos_second = sSec[1].find(")");
+                            snumber = sSec[1].substr(pos_first+1, pos_second-pos_first-1);
+                        }
+                        
                         int number = stoi(snumber);
 //                        cout<<number<<' '<<sSec[1]<<endl;
                         type=number;
@@ -169,7 +185,8 @@ void analyze(string s)
         changeIntoNewType(transferArg);
         if (displayComments) printTransferArguments(transferArg);
         APICreateTable(transferArg);
-        cout<<"executed Create Table successfully"<<endl;
+        cout<<"executed Create Table"<<endl;
+        return;
     }
     if (s.find("drop table")==0)
     {
@@ -181,7 +198,8 @@ void analyze(string s)
         // start to run API
         if (displayComments) printTransferArguments(transferArg);
         APIDropTable(transferArg);
-        cout<<"executed Drop Table successfully"<<endl;
+        cout<<"executed Drop Table"<<endl;
+        return;
     }
     if (s.find("create index")==0) {
         if (displayComments) cout<<"this is create index\n";
@@ -203,7 +221,8 @@ void analyze(string s)
         if (displayComments) printTransferArguments(transferArg);
         
         APICreateIndex(transferArg);
-        cout<<"executed Create Index successfully"<<endl;
+        cout<<"executed Create Index"<<endl;
+        return;
     }
     if (s.find("drop index")==0) {
         if (displayComments) cout<<"this is drop index\n";
@@ -215,12 +234,22 @@ void analyze(string s)
         if (displayComments) printTransferArguments(transferArg);
         
         APIDropIndex(transferArg);
-        cout<<"executed Drop Index successfully"<<endl;
+        cout<<"executed Drop Index"<<endl;
+        return;
     }
     if (s.find("select")==0) {
         if (displayComments) cout<<"this is select\n";
         //delete select * from
         s.erase(0,13);
+        
+        //select * from student;
+        if (s.find("where")==string::npos) {
+            vector<string> sSec=split(s, ";");
+            transferArg.tableName=strip(sSec[0]);
+            APISelect(transferArg);
+            cout<<"executed Select"<<endl;
+            return;
+        }
         
         vector<string> sSec=split(s, "where");
         transferArg.tableName=strip(sSec[0]);
@@ -261,7 +290,8 @@ void analyze(string s)
         if (displayComments) printTransferArguments(transferArg);
         
         APISelect(transferArg);
-        cout<<"executed Select successfully"<<endl;
+        cout<<"executed Select"<<endl;
+        return;
     }
     if (s.find("insert into")==0) {
         if (displayComments) cout<<"this is insert into\n";
@@ -288,7 +318,8 @@ void analyze(string s)
         // start to run API
         if (displayComments) printTransferArguments(transferArg);
         APIInsertInto(transferArg);
-        cout<<"executed Insert Into successfully"<<endl;
+        cout<<"executed Insert Into"<<endl;
+        return;
     }
     if (s.find("delete from")==0) {
         if (displayComments) cout<<"this is delete from\n";
@@ -329,7 +360,8 @@ void analyze(string s)
         // start to run API
         if (displayComments) printTransferArguments(transferArg);
         APIDelete(transferArg);
-        cout<<"executed Delete From successfully"<<endl;
+        cout<<"executed Delete From"<<endl;
+        return;
     }
     if (s.find("execfile")==0) {
         if (displayComments) cout<<"this is execfile ";
@@ -344,18 +376,20 @@ void analyze(string s)
             while (!readFile.eof()) {
                 analyze(sqlRead(readFile));
             }
-            cout<<"executed execfile successfully"<<endl;
+            cout<<"executed execfile"<<endl;
         }
         else
         {
             cout << "Failed opening file " << fileName << "!" << endl;
         }
+        return;
     }
     if (s.find("quit")==0) {
         if (displayComments) cout<<"this is quit\n";
         
         //start to run API
         APIQuit();
+        return;
     }
-//    cout<<"this is not a sql statement\n";
+    cout<<"this is not a sql statement\n";
 }

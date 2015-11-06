@@ -17,6 +17,7 @@
 
 bool displayComments = false;
 bool displayRecordContents = false;
+bool enableCheckUnique = false;
 
 CatalogManager * cm;
 IndexManager * im;
@@ -83,22 +84,43 @@ void APIInsertInto(TransferArguments transferArg)
         transferArg.args[i].type = types[i];
     }
     
+    vector<string> attributeNames=cm->getAttributeNames(transferArg.tableName);
+    
     memset(record->data, 0, sizeof(record->data));
     int current_pos=0;
+    
+    Value new_element;
     for (int i=0;i<types.size();i++)
     {
+        //if unique or primary
+        new_element.Vname=attributeNames[i];
+        new_element.op="=";
+        bool checkUnique = false;
+        if (cm->checkAttribute(transferArg.tableName, attributeNames[i])>=1) {
+            checkUnique =true;
+        }
+        
         if (types[i]==0) {
             memcpy(record->data+current_pos, &(transferArg.args[i].Vfloat), sizeof(transferArg.args[i].Vfloat));
             current_pos+=sizeof(transferArg.args[i].Vfloat);
+            if (checkUnique) {
+                new_element.Vfloat=transferArg.args[i].Vfloat;
+            }
         } else
         if (types[i]==-1) {
             memcpy(record->data+current_pos, &(transferArg.args[i].Vint), sizeof(transferArg.args[i].Vint));
             current_pos+=sizeof(transferArg.args[i].Vint);
+            if (checkUnique) {
+                new_element.Vint=transferArg.args[i].Vint;
+            }
         } else
         {
             memcpy(record->data+current_pos, transferArg.args[i].Vstring.c_str(),
                    strlen(transferArg.args[i].Vstring.c_str()));
             current_pos+=types[i];
+            if (checkUnique) {
+                new_element.Vstring=transferArg.args[i].Vstring;
+            }
         }
     }
     if (displayRecordContents) {
@@ -109,13 +131,23 @@ void APIInsertInto(TransferArguments transferArg)
         cout<<endl;
     }
     
+    if (enableCheckUnique) {
+        vector<Value> args;
+        args.push_back(new_element);
+        if (rm->selectRecord(transferArg.tableName, args)) {
+            //true means already have
+            cout<<"ERROR: this record has same unique value as others"<<endl;
+            delete offset;
+            delete record;
+            return;
+        }
+    }
     
     rm->insertRecord(transferArg.tableName, *record, *offset);
     
-    vector<string> attributeNames=cm->getAttributeNames(transferArg.tableName);
     for (int i=0; i<attributeNames.size(); i++) {
         if (cm->checkIndex(transferArg.tableName, attributeNames[i])) {
-            cout<<"attribute:"<<attributeNames[i]<<" has index"<<endl;
+            if (displayComments) cout<<"attribute:"<<attributeNames[i]<<" has index"<<endl;
             KeyValue keyValue(transferArg.args[i]);
             im->insertUpdate(transferArg.tableName, attributeNames[i], keyValue, *offset);
         }

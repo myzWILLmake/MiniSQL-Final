@@ -2,7 +2,7 @@ __author__ = 'frankhe'
 
 import random
 
-MAX_NUMBER_OF_SQLS = 20
+MAX_NUMBER_OF_SQLS = 5
 MAX_NUMBER_OF_ATTRIBUTES = 10
 
 letters = "abcdefghijklmnopqrstuvwxyz"
