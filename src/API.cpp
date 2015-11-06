@@ -120,6 +120,9 @@ void APIInsertInto(TransferArguments transferArg)
             im->insertUpdate(transferArg.tableName, attributeNames[i], keyValue, *offset);
         }
     }
+    
+    delete offset;
+    delete record;
     //not finished
 }
 
