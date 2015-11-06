@@ -8,7 +8,9 @@ create table student (
 );
 insert into student values ('12345678','wy',22,'M');
 insert into student values ('12345678','wy',22,'F');
-select * from student where sno <= '12345678’;
+select * from student where sno <= '12345678';
+create index stunameidx on student ( sname );
+drop index stunameidx;
 quit;
 
 create index stunameidx on student ( sname );

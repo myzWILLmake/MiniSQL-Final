@@ -578,7 +578,7 @@ bool RecordManager::optimize(string tableName, vector<Value>& inputCondition, Co
 			}
 			else{ // has not =
 				map_it->second.erase(map_it->second.begin(), map_it->second.begin()+5); // may have age!=x
-				map_it->second.push_back(lower);
+				map_it->second.push_back(upper);
 				continue;
 			}
 		}
