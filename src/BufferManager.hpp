@@ -12,6 +12,13 @@
 #include <stdio.h>
 #include <map>
 
+#if defined _MSC_VER
+#include <direct.h>
+#elif defined __GNUC__
+#include <sys/types.h>
+#include <sys/stat.h>
+#endif
+
 #include "Block.hpp"
 #include "IndexBlock.hpp"
 

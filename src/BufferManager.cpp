@@ -10,6 +10,14 @@
 
 #include "BufferManager.hpp"
 
+#ifdef _WIN32
+    std::string SEP = "\\";
+#elif __APPLE__
+    std::string SEP = "/";
+#else
+    std::string SEP = "/";
+#endif
+
 /* -------- private functions -------- */
 
 std::string BufferManager::formatNotoString(int numNo) {
@@ -47,8 +55,9 @@ void BufferManager::closeBlock(Block *block) {
         return;
     }
     std::ofstream fout;
+    std::string path = "table" + SEP + block->tableName + SEP;
     std::string fileName = block->tableName + "_" + formatNotoString(block->blockNo);
-    fout.open(fileName, std::ios::out | std::ios::binary);
+    fout.open(path + fileName, std::ios::out | std::ios::binary);
     if (fout) {
         fout.write((char*)block->records, sizeof(block->records));
         fout.close();
@@ -82,8 +91,9 @@ void BufferManager::closeIndexBlock(IndexBlock *block) {
         return;
     }
     std::ofstream fout;
+    std::string path = "idnex" + SEP + block->tableName + SEP + block->attrName + SEP;
     std::string fileName = block->tableName + "_" + block->attrName + "_" + formatNotoString(block->blockNo);
-    fout.open(fileName, std::ios::out | std::ios::binary);
+    fout.open(path + fileName, std::ios::out | std::ios::binary);
     if (fout) {
         fout.write(block->address, 0x1000);
         fout.close();
@@ -103,6 +113,13 @@ void BufferManager::closeIndexBlock(IndexBlock *block) {
 /* -------- public functions -------- */
 
 BufferManager::BufferManager() {
+#if defined _MSC_VER
+    _mkdir("table");
+    _mkdir("index");
+#elif defined __GNUC__
+    mkdir("table", 0777);
+    mkdir("index", 0777);
+#endif
     // Initial the position for the pool
     currentIBPPos = 0;
     currentRBPPos = 0;
@@ -140,8 +157,14 @@ BufferManager::~BufferManager() {
  */
 bool BufferManager::createTable(std::string tableName) {
     bool returnBool = false;
+    std::string path = "table" + SEP + tableName + SEP;
+#if defined _MSC_VER
+    _mkdir(path.c_str());
+#elif defined __GNUC__
+    mkdir(path.c_str(), 0777);
+#endif
     std::ofstream fout;
-    fout.open(tableName + "_" + formatNotoString(0), std::ios::out | std::ios::binary);
+    fout.open(path + tableName + "_" + formatNotoString(0), std::ios::out | std::ios::binary);
     if (fout) {
         Block* tmpBlock = new Block();
         for (int i=0; i < EACH_BLOCK_RECORDS; i++) {
@@ -172,14 +195,16 @@ bool BufferManager::dropTable(std::string tableName) {
         tmpBlock->active = false;
         recordBlockMap.erase(it);
     }
+    std::string path = "table" + SEP + tableName + SEP;
     // Delete the files
     for (int i=0; i<MAX_BLOCK_FILE_NUM; i++) {
-        std::string tmpFileName = tableName + "_" + formatNotoString(i);
+        std::string tmpFileName = path + tableName + "_" + formatNotoString(i);
         const char* tmpFileNameC = tmpFileName.c_str();
         int res = remove(tmpFileNameC);
         if (res)
             break;
     }
+    rmdir(path.c_str());
     return true;
 }
 
@@ -191,6 +216,7 @@ bool BufferManager::dropTable(std::string tableName) {
  */
 Block* BufferManager::getFirstBlock(std::string tableName) {
     Block* returnPtr = NULL;
+    std::string path = "table" + SEP + tableName + SEP;
     std::string fileName = tableName + "_" + formatNotoString(0);
     if (recordBlockMap.find(fileName) != recordBlockMap.end()) {
         // If existed in the map
@@ -198,7 +224,7 @@ Block* BufferManager::getFirstBlock(std::string tableName) {
     } else {
         // To open the Block
         std::ifstream fin;
-        fin.open(fileName, std::ios::in | std::ios::binary);
+        fin.open(path + fileName, std::ios::in | std::ios::binary);
         if (fin) {
             Block* tmpBlock = getBlockFromRecordBlockPool();
             int tmpReCordNum = 0;
@@ -228,6 +254,7 @@ Block* BufferManager::getFirstBlock(std::string tableName) {
  */
 Block* BufferManager::getNextBlock(Block *blockNow, int mode) {
     Block* returnPtr = NULL;
+    std::string path = "table" + SEP + blockNow->tableName + SEP;
     std::string nextBlockFileName = blockNow->tableName + "_" + formatNotoString(blockNow->blockNo + 1);
     if (recordBlockMap.find(nextBlockFileName) != recordBlockMap.end()) {
         // If existed in the map
@@ -235,7 +262,7 @@ Block* BufferManager::getNextBlock(Block *blockNow, int mode) {
     } else {
         // To open the Block
         std::ifstream fin;
-        fin.open(nextBlockFileName, std::ios::in | std::ios::binary);
+        fin.open(path + nextBlockFileName, std::ios::in | std::ios::binary);
         if (fin) {
             Block* tmpBlock = getBlockFromRecordBlockPool();
             int tmpRecordNum = 0;
@@ -255,7 +282,7 @@ Block* BufferManager::getNextBlock(Block *blockNow, int mode) {
             // Need to create the next block file
             if (mode == INSERT_MODE) {
                 std::ofstream fout;
-                fout.open(nextBlockFileName, std::ios::out | std::ios::binary);
+                fout.open(path + nextBlockFileName, std::ios::out | std::ios::binary);
                 if (fout) {
                     Block* tmpBlock = getBlockFromRecordBlockPool();
                     for (int i=0; i<EACH_BLOCK_RECORDS; i++) {
@@ -287,6 +314,7 @@ Block* BufferManager::getNextBlock(Block *blockNow, int mode) {
 Block* BufferManager::getBlockByOffset(std::string tableName, int offset) {
     Block* returnPtr = NULL;
     int blockNo = offset / EACH_BLOCK_RECORDS;
+    std::string path = "table" + SEP + tableName + SEP;
     std::string fileName = tableName + "_" + formatNotoString(blockNo);
     if (recordBlockMap.find(fileName) != recordBlockMap.end()) {
         // If existed in the map
@@ -294,7 +322,7 @@ Block* BufferManager::getBlockByOffset(std::string tableName, int offset) {
     } else  {
         // To open the Block
         std::ifstream fin;
-        fin.open(fileName, std::ios::in | std::ios::binary);
+        fin.open(path + fileName, std::ios::in | std::ios::binary);
         if (fin) {
             Block* tmpBlock = getBlockFromRecordBlockPool();
             int tmpRecordNum = 0;
@@ -343,13 +371,14 @@ Block* BufferManager::getBlockByOffset(std::string tableName, int offset) {
  */
 IndexBlock* BufferManager::getIndexBlock(std::string tableName, std::string attr, int blockNo) {
     IndexBlock* returnPtr = NULL;
+    std::string path = "index" + SEP + tableName + SEP + attr + SEP;
     std::string fileName = tableName + "_" + attr + "_" + formatNotoString(blockNo);
     if (indexBlockMap.find(fileName) != indexBlockMap.end()) {
         // Existed in the map
         returnPtr = indexBlockMap[fileName];
     } else {
         std::ifstream fin;
-        fin.open(fileName, std::ios::in | std::ios::binary);
+        fin.open(path + fileName, std::ios::in | std::ios::binary);
         if (fin) {
             IndexBlock* tmpBlock = getBlockFromIndexBlockPool();
             fin.read(tmpBlock->address, 0x1000);
@@ -362,9 +391,21 @@ IndexBlock* BufferManager::getIndexBlock(std::string tableName, std::string attr
             returnPtr = tmpBlock;
             fin.close();
         } else {
+            if (blockNo == 0) {
+                // Create the dir
+                std::string mdCommand0 = "index" + SEP + tableName;
+                std::string mdCommand1 = path;
+#if defined _MSC_VER
+                _mkdir(mdCommand0.c_str());
+                _mkdir(mdCommand1.c_str());
+#elif defined __GNUC__
+                mkdir(mdCommand0.c_str(), 0777);
+                mkdir(mdCommand1.c_str(), 0777);
+#endif
+            }
             // Create the file
             std::ofstream fout;
-            fout.open(fileName, std::ios::out | std::ios::binary);
+            fout.open(path + fileName, std::ios::out | std::ios::binary);
             fout.close();
             // Get the indexblock
             IndexBlock* tmpBlock = getBlockFromIndexBlockPool();
@@ -391,14 +432,28 @@ IndexBlock* BufferManager::getIndexBlock(std::string tableName, std::string attr
  */
 IndexBlock* BufferManager::getIndexNewBlock(std::string tableName, std::string attr) {
     IndexBlock* returnPtr = NULL;
+    std::string path = "index" + SEP + tableName + SEP + attr + SEP;
     for (int i=0; i<MAX_BLOCK_FILE_NUM; i++) {
         std::string tmpFileName = tableName + "_" + attr + "_" + formatNotoString(i);
-        std::ifstream inFile(tmpFileName.c_str());
+        std::string tmpFileNameWithDir = path + tmpFileName;
+        std::ifstream inFile(tmpFileNameWithDir.c_str());
         // If the file doesn't exist
         if (!inFile.good()) {
+            if (i == 0) {
+                // Create the dir
+                std::string mdCommand0 = "index" + SEP + tableName;
+                std::string mdCommand1 = path;
+#if defined _MSC_VER
+                _mkdir(mdCommand0.c_str());
+                _mkdir(mdCommand1.c_str());
+#elif defined __GNUC__
+                mkdir(mdCommand0.c_str(), 0777);
+                mkdir(mdCommand1.c_str(), 0777);
+#endif
+            }
             // Create the file
             std::ofstream fout;
-            fout.open(tmpFileName, std::ios::out | std::ios::binary);
+            fout.open(path + tmpFileName, std::ios::out | std::ios::binary);
             fout.close();
             // Get the indexBlock
             IndexBlock* tmpBlock = getBlockFromIndexBlockPool();
@@ -426,6 +481,7 @@ IndexBlock* BufferManager::getIndexNewBlock(std::string tableName, std::string a
  * @return              result for the operation
  */
 bool BufferManager::deleteIndexBlock(std::string tableName, std::string attr, int blockNo) {
+    std::string path = "index" + SEP + tableName + SEP + attr + SEP;
     std::string fileName = tableName + "_" + attr + "_" + formatNotoString(blockNo);
     std::map<std::string, IndexBlock*>::iterator it = indexBlockMap.find(fileName);
     if (it != indexBlockMap.end()) {
@@ -434,7 +490,7 @@ bool BufferManager::deleteIndexBlock(std::string tableName, std::string attr, in
     } else {
         // The file haven't been opened
     }
-    const char* fileNameC = fileName.c_str();
-    remove(fileNameC);
+    std::string rmCommand = path + fileName;
+    remove(rmCommand.c_str());
     return true;
 }
