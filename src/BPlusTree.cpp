@@ -195,7 +195,7 @@ void BPlusTree::release_unpinned()
 	}
 	for (vector<int>::iterator iter = indices.begin(); iter != indices.end(); iter++)
 	{
-		if (nodes[*iter])
+		if (nodes[*iter] != NULL)
 			delete nodes[*iter];
 		nodes.erase(*iter);
 		blocks.erase(*iter);
@@ -896,15 +896,21 @@ KeyValue BPlusTree::find_min(int block_num)
 
 bool BPlusTree::build(vector<pair<KeyValue, int> > init)
 {
+    /*
 	for (vector<pair<KeyValue, int> >::iterator iter = init.begin(); iter != init.end(); iter++)
 	{
 		insert(iter->first, iter->second);
 	}
-    /*
+     */
 	if (init.size() <= max_key_num)
 	{
 		fetch(0);
 		set_pin(0);
+        nodes[0]->is_root = true;
+        nodes[0]->is_leaf = true;
+        nodes[0]->next = -1;
+        nodes[0]->prev = -1;
+        nodes[0]->child_num = -1;
 		for (vector<pair<KeyValue, int> >::iterator iter = init.begin(); iter != init.end(); iter++)
 		{
 			nodes[0]->keys.push_back(iter->first);
@@ -935,6 +941,7 @@ bool BPlusTree::build(vector<pair<KeyValue, int> > init)
 			cur_node->next = -1;
 			if (prev != -1)
 				nodes[cur_node->prev]->next = cur_node->block_num;
+            prev = cur_node->block_num;
 			for (int j = 0; j < max_key_num; j++)
 			{
 				cur_node->keys.push_back(init.front().first);
@@ -961,6 +968,7 @@ bool BPlusTree::build(vector<pair<KeyValue, int> > init)
 			cur_node->next = -1;
 			if (prev != -1)
 				nodes[cur_node->prev]->next = cur_node->block_num;
+            prev = cur_node->block_num;
 			for (int j = 0; j < n; j++)
 			{
 				cur_node->keys.push_back(init.front().first);
@@ -971,7 +979,6 @@ bool BPlusTree::build(vector<pair<KeyValue, int> > init)
 		}
 		recur_build(children);
 	}
-     */
 	return true;
 }
 
@@ -981,13 +988,19 @@ bool BPlusTree::recur_build(vector<pair<KeyValue, int> > init)
 	{
 		fetch(0);
 		set_pin(0);
+        nodes[0]->is_root = true;
+        nodes[0]->is_leaf = false;
+        nodes[0]->next = -1;
+        nodes[0]->prev = -1;
 		int i = 0;
 		for (vector<pair<KeyValue, int> >::iterator iter = init.begin(); iter != init.end(); iter++)
 		{
 			if (iter != init.begin())
+            {
 				nodes[0]->keys.push_back(iter->first);
+                nodes[0]->key_num += 1;
+            }
 			nodes[0]->offsets.push_back(iter->second);
-			nodes[0]->key_num += 1;
 			nodes[iter->second]->parent = 0;
 			nodes[iter->second]->child_num = i;
 			write_back(iter->second);
