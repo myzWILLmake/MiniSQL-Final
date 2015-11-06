@@ -52,7 +52,7 @@ bool RecordManager::insertRecord(string tableName, Record& record, int &offset)
 			break;
 		}
 	}
-	offset=block->recordNum*EACH_BLOCK_RECORDS+i;
+	offset = EACH_BLOCK_RECORDS*block->blockNo+i;
 	block->recordNum++;
 	return true;
 }
@@ -297,6 +297,7 @@ bool RecordManager::getKeysOffsets(string tableName, string attributeName, vecto
         for (int i = 0; i < EACH_BLOCK_RECORDS; i++) {
             if (block->records[i].empty == false) {
                 offset = (block->blockNo*EACH_BLOCK_RECORDS) + i;
+				cout << offset << endl;
                 if (type == -1) {
                     memcpy(&value.Vint, block->records[i].data + pos, size);
                 }
