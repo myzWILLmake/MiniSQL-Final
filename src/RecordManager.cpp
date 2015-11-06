@@ -124,6 +124,7 @@ bool RecordManager::deleteRecord(string tableName, vector<Value> &inputCondition
 							Block *block= bm->getBlockByOffset(tableName, result[i]);
 							recordIndex=result[i]-block->blockNo*EACH_BLOCK_RECORDS;
 							if(match(block->records[recordIndex], condition, tableName)){
+                                deleteIndex(block->records[recordIndex], tableName);
 								block->records[recordIndex].empty=true;
 								block->recordNum--;
 							}
@@ -144,6 +145,7 @@ bool RecordManager::deleteRecord(string tableName, vector<Value> &inputCondition
 				for (int i = 0; i < EACH_BLOCK_RECORDS; i++) { 
 					if (!block->records[i].empty) {
 						if (condition.empty() || !condition.empty() && match(block->records[i], condition, tableName)) {
+                            deleteIndex(block->records[i], tableName);
 							block->records[i].empty = true;
 							block->recordNum--;
 						}
@@ -297,7 +299,7 @@ bool RecordManager::getKeysOffsets(string tableName, string attributeName, vecto
         for (int i = 0; i < EACH_BLOCK_RECORDS; i++) {
             if (block->records[i].empty == false) {
                 offset = (block->blockNo*EACH_BLOCK_RECORDS) + i;
-				cout << offset << endl;
+				// cout << offset << endl;
                 if (type == -1) {
                     memcpy(&value.Vint, block->records[i].data + pos, size);
                 }
@@ -336,6 +338,34 @@ void RecordManager::printRecord(const Record & record, vector<int> &attributeTyp
 			cout << "\t" << (char *)(record.data+pos);
 	}
 	cout << endl;
+}
+
+void RecordManager::deleteIndex(const Record & record, string tableName)
+{
+    int type, size;
+    
+    vector<int> attributeTypes = cm->getAttributeTypes(tableName);
+    vector<string> attributes = cm->getAttributeNames(tableName);
+    
+    for (int i = 0, pos=0; i < attributeTypes.size(); i++, pos+=size) {
+        type = attributeTypes[i];
+        size = type < 1 ? 4 : type;
+        
+        if (cm->checkIndex(tableName, attributes[i]))
+        {
+            Value temp(type);
+            if (type == -1)
+                temp.Vint = *(int *)(record.data + pos);
+            else if (type == 0)
+                temp.Vfloat = *(float *)(record.data + pos);
+            else
+            {
+                string s((char *)(record.data+pos));
+                temp.Vstring = s;
+            }
+            im->deleteUpdate(tableName, attributes[i], temp);
+        }
+    }
 }
 
 /**
