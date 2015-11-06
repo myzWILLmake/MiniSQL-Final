@@ -98,21 +98,13 @@ void printTransferArguments(TransferArguments transferArg)
 void changeIntoNewType(TransferArguments &transferArg)
 {
     for (vector<Value>::iterator it=transferArg.args.begin(); it!=transferArg.args.end(); it++) {
-        switch (it->type) {
-            case 1:
-                it->type = -1;
-                break;
-            case 2:
-                it->type = 0;
-                break;
-            case 3:
-                it->type = 32;
-                break;
-            case -1:
-                it->type = -2;// unknown type
-                break;
-        }
-//        if (it->type==-1) then its still -1
+        if (it->type==1) {
+            it->type=-1;
+        } else
+            if (it->type==2) {
+                it->type=0;
+            }
+// if (it->type==-1) then its still -1
     }
 }
 
@@ -121,7 +113,7 @@ void analyze(string s)
     TransferArguments transferArg;
     if (s.find("create table")==0)
     {
-        cout<<"this is create table\n";
+        if (displayComments) cout<<"this is create table\n";
         s.erase(0,13);
         size_t pos=s.find("(");
         transferArg.tableName=strip(s.substr(0,pos));
@@ -156,7 +148,14 @@ void analyze(string s)
                     type=2;
                 }   else
                     if (sSec[1].find("char")==0) {
-                        type=3;
+                        // char(120)
+                        //0123456789
+                        size_t pos_first = sSec[1].find("(");
+                        size_t pos_second = sSec[1].find(")");
+                        string snumber = sSec[1].substr(pos_first+1, pos_second-pos_first-1);
+                        int number = stoi(snumber);
+//                        cout<<number<<' '<<sSec[1]<<endl;
+                        type=number;
                     }
             Value new_value(type);
             new_value.Vname=name;
@@ -168,24 +167,24 @@ void analyze(string s)
         
         // start to run API
         changeIntoNewType(transferArg);
-        printTransferArguments(transferArg);
-        cout<<"interpreter print finished"<<endl;
+        if (displayComments) printTransferArguments(transferArg);
         APICreateTable(transferArg);
-        cout<<"executed successfully"<<endl;
+        cout<<"executed Create Table successfully"<<endl;
     }
     if (s.find("drop table")==0)
     {
-        cout<<"this is drop table\n";
+        if (displayComments) cout<<"this is drop table\n";
         s.erase(0,10);
         s.erase(s.size()-1,1);
         transferArg.tableName=strip(s);
         
         // start to run API
-        printTransferArguments(transferArg);
+        if (displayComments) printTransferArguments(transferArg);
         APIDropTable(transferArg);
+        cout<<"executed Drop Table successfully"<<endl;
     }
     if (s.find("create index")==0) {
-        cout<<"this is create index\n";
+        if (displayComments) cout<<"this is create index\n";
         
         s.erase(0,12);
         vector<string> sSec=split(s, "on");
@@ -201,23 +200,25 @@ void analyze(string s)
         transferArg.args.push_back(new_element);
         
         // start to run API
-        printTransferArguments(transferArg);
+        if (displayComments) printTransferArguments(transferArg);
         
         APICreateIndex(transferArg);
+        cout<<"executed Create Index successfully"<<endl;
     }
     if (s.find("drop index")==0) {
-        cout<<"this is drop index\n";
+        if (displayComments) cout<<"this is drop index\n";
         s.erase(0,10);
         s.erase(s.size()-1,1);
         transferArg.indexName=strip(s);
         
         // start to run API
-        printTransferArguments(transferArg);
+        if (displayComments) printTransferArguments(transferArg);
         
         APIDropIndex(transferArg);
+        cout<<"executed Drop Index successfully"<<endl;
     }
     if (s.find("select")==0) {
-        cout<<"this is select\n";
+        if (displayComments) cout<<"this is select\n";
         //delete select * from
         s.erase(0,13);
         
@@ -257,12 +258,13 @@ void analyze(string s)
         }
         
         // start to run API
-        printTransferArguments(transferArg);
+        if (displayComments) printTransferArguments(transferArg);
         
         APISelect(transferArg);
+        cout<<"executed Select successfully"<<endl;
     }
     if (s.find("insert into")==0) {
-        cout<<"this is insert into\n";
+        if (displayComments) cout<<"this is insert into\n";
         s.erase(0,11);
         vector<string> sSec=split(s, "values");
         transferArg.tableName=strip(sSec[0]);
@@ -284,15 +286,12 @@ void analyze(string s)
         }
         
         // start to run API
-        changeIntoNewType(transferArg);
-        printTransferArguments(transferArg);
-        cout<<"interpreter print finished"<<endl;
+        if (displayComments) printTransferArguments(transferArg);
         APIInsertInto(transferArg);
-        
-        cout<<"executed successfully"<<endl;
+        cout<<"executed Insert Into successfully"<<endl;
     }
     if (s.find("delete from")==0) {
-        cout<<"this is delete from\n";
+        if (displayComments) cout<<"this is delete from\n";
         s.erase(0,11);
         vector<string> sSec=split(s, "where");
         transferArg.tableName=strip(sSec[0]);
@@ -328,11 +327,12 @@ void analyze(string s)
         }
         
         // start to run API
-        printTransferArguments(transferArg);
+        if (displayComments) printTransferArguments(transferArg);
         APIDelete(transferArg);
+        cout<<"executed Delete From successfully"<<endl;
     }
     if (s.find("execfile")==0) {
-        cout<<"this is execfile ";
+        if (displayComments) cout<<"this is execfile ";
         s.erase(0,8);
         s.erase(s.size()-1,1);
         string fileName=strip(s);
@@ -344,7 +344,7 @@ void analyze(string s)
             while (!readFile.eof()) {
                 analyze(sqlRead(readFile));
             }
-            cout<<"execfile finished"<<endl;
+            cout<<"executed execfile successfully"<<endl;
         }
         else
         {
@@ -352,7 +352,7 @@ void analyze(string s)
         }
     }
     if (s.find("quit")==0) {
-        cout<<"this is quit\n";
+        if (displayComments) cout<<"this is quit\n";
         
         //start to run API
         APIQuit();

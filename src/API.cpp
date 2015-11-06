@@ -15,6 +15,9 @@
 #include "Block.hpp"
 #include <cstring>
 
+bool displayComments = false;
+bool displayRecordContents = false;
+
 CatalogManager * cm;
 IndexManager * im;
 RecordManager * rm;
@@ -98,11 +101,14 @@ void APIInsertInto(TransferArguments transferArg)
             current_pos+=32;
         }
     }
-    cout<<"this is the record in int: "<<endl;
-    for (int i=0; i<current_pos; i++) {
-        cout<<int(record->data[i])<<' ';
+    if (displayRecordContents) {
+        cout<<"this is the record in int: "<<endl;
+        for (int i=0; i<current_pos; i++) {
+            cout<<int(record->data[i])<<' ';
+        }
+        cout<<endl;
     }
-    cout<<endl;
+    
     
     rm->insertRecord(transferArg.tableName, *record, *offset);
     

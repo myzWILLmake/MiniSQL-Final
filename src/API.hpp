@@ -15,6 +15,8 @@
 #include "BufferManager.hpp"
 #include "CommonHeader.hpp"
 
+extern bool displayComments;
+
 class CatalogManager;
 class IndexManager;
 class RecordManager;
