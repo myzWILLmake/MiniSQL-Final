@@ -91,7 +91,7 @@ void BufferManager::closeIndexBlock(IndexBlock *block) {
         return;
     }
     std::ofstream fout;
-    std::string path = "idnex" + SEP + block->tableName + SEP + block->attrName + SEP;
+    std::string path = "index" + SEP + block->tableName + SEP + block->attrName + SEP;
     std::string fileName = block->tableName + "_" + block->attrName + "_" + formatNotoString(block->blockNo);
     fout.open(path + fileName, std::ios::out | std::ios::binary);
     if (fout) {
