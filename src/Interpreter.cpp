@@ -280,8 +280,12 @@ void analyze(string s)
             }
             else
             {
-                new_element.Vfloat=stod(value1);
-                new_element.Vint=stoi(value1);
+                try {
+                    new_element.Vfloat=stod(value1);
+                    new_element.Vint=stoi(value1);
+                } catch (invalid_argument e) {
+                    cout << "Invalid argument " << value1 << endl;
+                }
             }
             transferArg.args.push_back(new_element);
         }
@@ -309,8 +313,12 @@ void analyze(string s)
                 new_element.Vstring=sSec_it[0];
             }   else
             {
-                new_element.Vfloat=stod(*it);
-                new_element.Vint=stoi(*it);
+                try {
+                    new_element.Vfloat=stod(*it);
+                    new_element.Vint=stoi(*it);
+                } catch (invalid_argument e) {
+                    cout << "Invalid argument " << *it << endl;
+                }
             }
             transferArg.args.push_back(new_element);
         }
@@ -351,8 +359,13 @@ void analyze(string s)
                 new_element.Vstring=sSec_value1[0];
             }   else
             {
-                new_element.Vfloat=stod(value1);
-                new_element.Vint=stoi(value1);
+                try {
+                    new_element.Vfloat=stod(value1);
+                    new_element.Vint=stoi(value1);
+                } catch (invalid_argument e) {
+                    cout << "Invalid argument " << value1 << endl;
+                }
+                
             }
             transferArg.args.push_back(new_element);
         }
