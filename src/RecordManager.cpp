@@ -163,7 +163,7 @@ bool RecordManager::deleteRecord(string tableName, vector<Value> &inputCondition
 /**
  * select records in a table with condition 
  */
-bool RecordManager::selectRecord(string tableName, vector<Value> &inputCondition)
+bool RecordManager::selectRecord(string tableName, vector<Value> &inputCondition, bool shouldPrint)
 {
 	Condition condition;
 	Condition::iterator map_it;
@@ -233,13 +233,18 @@ bool RecordManager::selectRecord(string tableName, vector<Value> &inputCondition
 							if(match(block->records[recordIndex], condition, tableName)){
 								if (flag3 == 0) {
 									flag3 = 1;
-									printHead(attributeNames, attributeTypes, printWidth);
+									if (shouldPrint) {
+										printHead(attributeNames, attributeTypes, printWidth);
+									}
 								}
-								printRecord(block->records[recordIndex], attributeTypes, printWidth);
+								if (shouldPrint) {
+									printRecord(block->records[recordIndex], attributeTypes, printWidth);
+								}
 							}
 						}
 						if (flag3 == 0){
 							cout << "No records found." << endl;
+							return true;
 						}
 		
 						flag1=1;
@@ -260,9 +265,13 @@ bool RecordManager::selectRecord(string tableName, vector<Value> &inputCondition
 						if (condition.empty() || !condition.empty() && match(block->records[i], condition, tableName)) {
 							if (flag3 == 0) {
 								flag3 = 1;
-								printHead(attributeNames, attributeTypes, printWidth);
+								if (shouldPrint) {
+									printHead(attributeNames, attributeTypes, printWidth);
+								}
 							}
-							printRecord(block->records[i], attributeTypes, printWidth);
+							if (shouldPrint) {
+								printRecord(block->records[i], attributeTypes, printWidth);
+							}
 						}
 					}
 				}
@@ -270,10 +279,11 @@ bool RecordManager::selectRecord(string tableName, vector<Value> &inputCondition
 			}
 			if (flag3 == 0){
 				cout << "No records found." << endl;
+				return true;
 			}
 		}
 	}
-	return true;
+	return false;
 }
 
 /**
@@ -337,8 +347,14 @@ void RecordManager::printRecord(const Record & record, vector<int> &attributeTyp
 			cout << setiosflags(ios::left)<< setw(printWidth[i]) << *(int *)(record.data + pos);
 		else if (type == 0)
 			cout << setiosflags(ios::left) << setw(printWidth[i]) << *(float *)(record.data + pos);
-		else
-			cout << setiosflags(ios::left) << setw(printWidth[i]) << (char *)(record.data+pos);
+		else {
+			char * sTmp = new char[size+1];
+			memcpy(sTmp, record.data + pos, size);
+			sTmp[size] = '\0';
+			//value.Vstring = sTmp;
+			//cout << setiosflags(ios::left) << setw(printWidth[i]) << (char *)(record.data + pos);
+			cout << setiosflags(ios::left) << setw(printWidth[i]) << sTmp;
+		}
 	}
 	cout << endl;
 }

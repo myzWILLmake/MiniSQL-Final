@@ -26,7 +26,7 @@ public:
 	bool insertRecord(string tableName, Record &record, int &offset); // insert a record to a table, api should check record and if the table exists
 	bool deleteRecord(string tableName, vector<Value> &inputCondition); // delete record with conditions
     void deleteIndex(const Record & record, string tableName);//delete all indices of the record
-	bool selectRecord(string tableName, vector<Value> &inputCondition); // query records with conditions
+	bool selectRecord(string tableName, vector<Value> &inputCondition, bool shouldPrint); // query records with conditions
 	bool getKeysOffsets(string tableName, string attributeName, vector<pair<Value, int>> &tmp); //get all values of an attribute in a table and offsets of those records
 	void printRecord(const Record &record, vector<int> &attributeTypes, vector<int> &printWidth); // print a record in a line
 	void printHead(vector<string> &attributeNames, vector<int> &attributeTypes, vector<int> &printWidth); // print the table head
