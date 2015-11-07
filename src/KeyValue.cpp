@@ -110,7 +110,7 @@ KeyValue::KeyValue(int type, int mode)
 		{
 		case -1: i = INT_MIN; break;
 		case 0: f = FLT_MIN; break;
-		default: s = string(type, CHAR_MIN); break;
+        default: s = string(""); s.resize(type); break;
 		}
 	}
 	this->type = type;
