@@ -541,8 +541,8 @@ bool RecordManager::optimize(string tableName, vector<Value>& inputCondition, Co
 			upper = map_it->second.at(3);
 		}
 		else {
-			upper.type = -2;
-		}
+
+			upper.type = -2;		}
 
 		if (lower.type != -2 && upper.type != -2) {  // has lower and upper
 			if (lower > upper ) {  // age>10 and age<9

@@ -22,8 +22,8 @@
 #include "Block.hpp"
 #include "IndexBlock.hpp"
 
-#define RECORD_BLOCK_NUM    1024
-#define INDEX_BLOCK_NUM     1024
+#define RECORD_BLOCK_NUM    20000
+#define INDEX_BLOCK_NUM     20000
 #define MAX_BLOCK_FILE_NUM  10000
 
 class BufferManager {

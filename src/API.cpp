@@ -122,6 +122,19 @@ void APIInsertInto(TransferArguments transferArg)
                 new_element.Vstring=transferArg.args[i].Vstring;
             }
         }
+        
+        if (enableCheckUnique && checkUnique) {
+            vector<Value> args;
+            args.push_back(new_element);
+            if (rm->selectRecord(transferArg.tableName, args, false)) {
+                //true means already have
+                cout<<"ERROR: this record has same unique value as others"<<endl;
+                delete offset;
+                delete record;
+                return;
+            }
+        }
+
     }
     if (displayRecordContents) {
         cout<<"this is the record in int: "<<endl;
@@ -129,18 +142,6 @@ void APIInsertInto(TransferArguments transferArg)
             cout<<int(record->data[i])<<' ';
         }
         cout<<endl;
-    }
-    
-    if (enableCheckUnique) {
-        vector<Value> args;
-        args.push_back(new_element);
-        if (rm->selectRecord(transferArg.tableName, args)) {
-            //true means already have
-            cout<<"ERROR: this record has same unique value as others"<<endl;
-            delete offset;
-            delete record;
-            return;
-        }
     }
     
     rm->insertRecord(transferArg.tableName, *record, *offset);
@@ -182,7 +183,7 @@ void APISelect(TransferArguments transferArg)
     }
     
     // call RecordManager to select and print records
-    rm->selectRecord(transferArg.tableName, transferArg.args);
+    rm->selectRecord(transferArg.tableName, transferArg.args, true);
 }
 
 void APIDropTable(TransferArguments transferArg)
